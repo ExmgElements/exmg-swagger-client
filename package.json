@@ -4,7 +4,8 @@
   "description": "Swagger 2.0 api generator",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js && polymer serve"
+    "start": "polymer serve",
+    "build-swagger-client": "node ./node_modules/swagger-client build-bundle"
   },
   "repository": {
     "type": "git",
@@ -13,7 +14,5 @@
   "author": "",
   "license": "ISC",
   "homepage": "https://bitbucket.org/exmachina/exmg-swagger2.0#readme",
-  "dependencies": {
-    "swagger-client": "^3.2.2"
-  }
+  "devDependencies": {}
 }

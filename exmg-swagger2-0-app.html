@@ -1,0 +1,127 @@
+<link rel="import" href="./bower_components/polymer/polymer-element.html">
+<link rel="import" href="./bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="./swagger-client/swagger-client.html">
+
+<script>
+(() => {
+  'use strict';
+  /**
+   * @customElement
+   * @polymer
+   */
+  class ExmgSwagger20App extends Polymer.Element {
+    constructor() {
+      super();
+
+      new SwaggerClient(this.swaggerUrl).then((swaggerClient) => {
+        this.swaggerClient = swaggerClient;
+      });
+    }
+
+    static get is() { return 'exmg-swagger2-0-app'; }
+    static get properties() {
+      return {
+        resource: {
+          type: String,
+          value: ''
+        },
+        method: {
+          type: String,
+          value: ''
+        },
+        timeout: {
+          type: String,
+        },
+        sync: {
+          type: Boolean,
+        },
+        auto: {
+          type: Boolean,
+          value: false,
+        },
+        swaggerUrl: {
+          type: String,
+          value: 'http://127.0.0.1:8081/src/swagger.json',
+        },
+        serverUrl: {
+          type: String,
+          value: 'https://web02.winview-dev-feature.playtotv.com/api/'
+        },
+        response: {
+          type: Object,
+          value: '',
+        },
+        swaggerClient: {
+          type: Object,
+        }
+      };
+    }
+
+    static get observers() {
+      return [
+          '_requestOptionsChanged(resource, method, sync, timeout, auto, swaggerUrl, swaggerClient)',
+      ]
+    }
+
+    _requestOptionsChanged() {
+      if (!this.swaggerClient) {
+        return false;
+      }
+
+      this.handleCall();
+    }
+
+    handleCall() {
+      const resource = this._resourceAvailable();
+      const method = this._methodAvailable();
+
+      if (resource.error) {
+        return console.warn(resource.error);
+      }
+
+      if (method.error) {
+        return console.warn(method.error);
+      }
+
+      const apiResourse = this.swaggerClient.apis.userState;
+
+
+      console.log(this.swaggerClient.url = this.serverUrl);
+
+      this.swaggerClient.apis[resource][method]();
+    }
+
+    _resourceAvailable() {
+      if (!this.resource) {
+        return ({ error: 'No resource given' });
+      }
+
+      const isAvailable = this.swaggerClient.spec.tags.find(tag => tag.name === this.resource);
+
+      if (isAvailable) {
+        return isAvailable.name;
+      }
+
+      return ({ error: 'Resource not found: ' + resource });
+    }
+
+    _methodAvailable() {
+      if (!this.method) {
+        return ({ error: 'No method given' });
+      }
+
+      const { apis } = this.swaggerClient;
+
+      for (var key in apis[this.resource]) {
+        if (this.method === key ) {
+          return key;
+        }
+      }
+
+      return ({ error: 'Method not found: ' + this.method });
+    }
+  }
+
+  window.customElements.define(ExmgSwagger20App.is, ExmgSwagger20App);
+})();
+</script>

@@ -13,14 +13,6 @@
    * @polymer
    */
   class ExmgSwagger20App extends Polymer.Element {
-    constructor() {
-      super();
-
-      new SwaggerClient(this.swaggerUrl).then((swaggerClient) => {
-        this.swaggerClient = swaggerClient;
-      });
-    }
-
     static get is() { return 'exmg-swagger2-0-app'; }
     static get properties() {
       return {
@@ -30,17 +22,6 @@
         },
         method: {
           type: String,
-          value: ''
-        },
-        timeout: {
-          type: String,
-        },
-        sync: {
-          type: Boolean,
-        },
-        auto: {
-          type: Boolean,
-          value: false,
         },
         swaggerUrl: {
           type: String,
@@ -48,32 +29,40 @@
         },
         serverUrl: {
           type: String,
-        },
-        response: {
-          type: Object,
-          value: () => {
-            return {
-              value: 'None'
-            };
-          }
+          notify: true,
         },
         swaggerClient: {
           type: Object,
         },
         error: {
           type: Object,
-          value: 'none',
+          notify: true,
+        },
+        data: {
+          type: Object,
+          notify: true,
+        },
+        auto: {
+          type: Boolean,
+          notify: true,
+          value: false,
         }
       };
     }
 
-    static get observers() {
-      return [
-          '_requestOptionsChanged(resource, method, sync, timeout, auto, swaggerUrl, swaggerClient)',
-      ]
+    constructor() {
+      super();
+
+      new SwaggerClient(this.swaggerUrl, { url: this.serverUrl }).then((swaggerClient) => {
+        this.swaggerClient = swaggerClient;
+
+        if (this.auto) {
+          this.generateRequest();
+        }
+      });
     }
 
-    _requestOptionsChanged() {
+    generateRequest() {
       if (!this.swaggerClient) {
         return false;
       }
@@ -93,15 +82,15 @@
         return this.set('error', method.error);
       }
 
-      const apiResourse = this.swaggerClient.apis.userState;
-
       this.swaggerClient.url = this.serverUrl;
-      this.swaggerClient.apis[resource][method]().then((res) => {
-        this.set('data', data);
-      },
-      (error) => {
-        this.set('error', error);
-      });
+      this.swaggerClient.spec.basePath = '/api';
+
+      this.swaggerClient.apis[resource][method]().then(
+        data =>
+          this.set('data', data.obj),
+        error =>
+          this.set('error', error)
+      );
     }
 
     _resourceAvailable() {

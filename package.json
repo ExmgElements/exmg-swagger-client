@@ -4,7 +4,7 @@
   "description": "Swagger 2.0 api generator",
   "main": "index.js",
   "scripts": {
-    "start": "polymer serve",
+    "start": "start http://localhost:8081/demo && polymer serve",
     "build-swagger-client": "node ./node_modules/swagger-client build-bundle"
   },
   "repository": {

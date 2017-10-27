@@ -1,5 +1,8 @@
+<link rel="import" href="./bower_components/polymer/polymer.html">
 <link rel="import" href="./bower_components/polymer/polymer-element.html">
 <link rel="import" href="./bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="./bower_components/paper-card/paper-card.html">
+<link rel="import" href="./bower_components/paper-styles/default-theme.html">
 <link rel="import" href="./swagger-client/swagger-client.html">
 
 <script>
@@ -41,18 +44,25 @@
         },
         swaggerUrl: {
           type: String,
-          value: 'http://127.0.0.1:8081/src/swagger.json',
+          value: '/src/swagger.json',
         },
         serverUrl: {
           type: String,
-          value: 'https://web02.winview-dev-feature.playtotv.com/api/'
         },
         response: {
           type: Object,
-          value: '',
+          value: () => {
+            return {
+              value: 'None'
+            };
+          }
         },
         swaggerClient: {
           type: Object,
+        },
+        error: {
+          type: Object,
+          value: 'none',
         }
       };
     }
@@ -76,19 +86,22 @@
       const method = this._methodAvailable();
 
       if (resource.error) {
-        return console.warn(resource.error);
+        return this.set('error', resource.error);
       }
 
       if (method.error) {
-        return console.warn(method.error);
+        return this.set('error', method.error);
       }
 
       const apiResourse = this.swaggerClient.apis.userState;
 
-
-      console.log(this.swaggerClient.url = this.serverUrl);
-
-      this.swaggerClient.apis[resource][method]();
+      this.swaggerClient.url = this.serverUrl;
+      this.swaggerClient.apis[resource][method]().then((res) => {
+        this.set('data', data);
+      },
+      (error) => {
+        this.set('error', error);
+      });
     }
 
     _resourceAvailable() {

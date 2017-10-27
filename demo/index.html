@@ -9,9 +9,55 @@
     <link rel="import" href="../exmg-swagger2-0-app.html">
   </head>
   <body>
-    <exmg-swagger2-0-app
-      resource="userState"
-      method="getState"
-    ></exmg-swagger2-0-app>
+    <dom-module id="x-demo">
+        <template>
+          <custom-style>
+            <style is="custom-style">
+              .shadow-8dp { @apply --shadow-elevation-8dp; }
+              .shadow {
+                display: inline-block;
+                padding: 8px;
+                margin: 16px;
+              }
+            </style>
+          </custum-style>
+          <h1>Swagger 2.0 client component 1</h1>
+          <exmg-swagger2-0-app
+            resource="userState"
+            method="getState"
+            server-url="https://web02.winview-dev-feature.playtotv.com/api/"
+            error="{{error}}"
+            resonse="{{data}}"
+          ></exmg-swagger2-0-app>
+          <paper-card heading="Response Swagger call" class="shadow shadow-8dp">
+            <div class="card-content">
+              error: {{error}}
+              <template is="dom-if" if="[[error]]">
+                Error: [[error]]
+              </template>
+              <template is="dom-if" if="[[data]]">
+                data: [[data]]
+              </template>
+            </div>
+          </paper-card>
+        </template>
+        <script>
+        window.addEventListener('WebComponentsReady', function() {
+          class XDemo extends Polymer.Element {
+            static get is() { return 'x-demo'; }
+            static get properties() {
+              return {
+                error: {
+                  type: Object,
+                  notify: true,
+                }
+              }
+            };
+          }
+          window.customElements.define(XDemo.is, XDemo);
+        });
+        </script>
+      </dom-module>
+      <x-demo></x-demo>
   </body>
 </html>

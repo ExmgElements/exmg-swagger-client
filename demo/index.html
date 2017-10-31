@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
     <title>exmg-data-connection</title>
-    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
     <link rel="import" href="../exmg-data-connection.html">
   </head>
   <body>
     <dom-module id="data-connection-demo">
       <template>
-        <custom-style>
-          <style is="custom-style">
-          </style>
-        </custum-style>
         <h1>Exmg Data Connection Element</h1>
         <paper-card heading="Response Swagger call">
           <div class="card-content">
@@ -27,24 +24,30 @@
           </div>
         </paper-card>
         <exmg-data-connection
+          id="data-connection-wv"
           resource="globalData"
           method="get"
           server-url="https://backend.winview-dev-feature.playtotv.com/api/"
           error="{{error}}"
           data="{{data}}"
-          auto
         ></exmg-data-connection>
       </template>
       <script>
-      window.addEventListener('WebComponentsReady', function() {
-        class DataConnectionDemo extends Polymer.Element {
-          static get is() { return 'data-connection-demo'; }
-          constructor() {
-            super();
+        HTMLImports.whenReady(function() {
+          class DataConnectionDemo extends Polymer.Element {
+            static get is() { return 'data-connection-demo'; }
+            constructor() {
+              super();
+            }
+            ready() {
+              super.ready();
+
+              const DataConnectionElement = Polymer.dom(this.root).querySelector('#data-connection-wv');
+              DataConnectionElement.generateRequest();
+            }
           }
-        }
-        window.customElements.define(DataConnectionDemo.is, DataConnectionDemo);
-      });
+          window.customElements.define(DataConnectionDemo.is, DataConnectionDemo);
+        });
       </script>
     </dom-module>
     <data-connection-demo></data-connection-demo>

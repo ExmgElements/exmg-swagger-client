@@ -6,7 +6,7 @@
 <link rel="import" href="./swagger-client/swagger-client.html">
 
 <script>
-{
+(() => {
   'use strict';
   /**
   * Data connection Polymer element that connects using a swagger 2.0 schema and a restfull API server.
@@ -62,6 +62,15 @@
           type: Boolean,
           notify: true,
           value: false,
+        },
+        search: {
+          type: String,
+          observer: "_findResults"
+        },
+        retryTimerSwaggerClient: {
+          type: Number,
+          readOnly: true,
+          value: 250
         }
       };
     }
@@ -75,9 +84,26 @@
         this.swaggerClient.spec.basePath = '/api';
 
         if (this.auto) {
-          this.generateRequest();
+          this.handleRequest();
         }
       });
+    }
+
+    /*
+      Check if plugin is loaded, if not retry
+    */
+
+    generateRequest() {
+      if (!this.swaggerClient) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            if (this.swaggerClient) {
+              resolve(this.handleRequest());
+            }
+          }, this.retryTimerSwaggerClient);
+        });
+      }
+      this.handleRequest();
     }
 
     /**
@@ -85,11 +111,7 @@
      *
      **/
 
-    generateRequest() {
-      if (!this.swaggerClient) {
-        return false;
-      }
-
+    handleRequest() {
       const resource = this._resourceAvailable();
       const method = this._methodAvailable();
 
@@ -154,5 +176,5 @@
    */
   window.Exmg = window.Exmg || {};
   Exmg.DataConnectionElement = DataConnectionElement;
-}
+})();
 </script>

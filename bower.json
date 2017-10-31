@@ -1,5 +1,5 @@
 {
-  "name": "exmg-swagger2-0",
+  "name": "exmg-data-connection",
   "description": "component to connect through swagger 2.0",
   "main": "index.html",
   "dependencies": {

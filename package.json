@@ -1,18 +1,14 @@
 {
-  "name": "exmg-swagger2.0",
+  "name": "exmg-data-connection",
   "version": "1.0.0",
-  "description": "Swagger 2.0 api generator",
-  "main": "index.js",
-  "scripts": {
-    "start": "start http://localhost:8081/demo && polymer serve",
-    "build-swagger-client": "node ./node_modules/swagger-client build-bundle"
-  },
+  "description": "Data Connection via Swagger 2.0.",
+  "main": "exmg-data-connection.html",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@bitbucket.org/exmachina/exmg-swagger2.0.git"
   },
   "author": "",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/exmachina/exmg-swagger2.0#readme",
+  "homepage": "https://bitbucket.org/exmachina/exmg-data-connection#readme",
   "devDependencies": {}
 }

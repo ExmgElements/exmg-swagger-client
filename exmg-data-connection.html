@@ -6,14 +6,30 @@
 <link rel="import" href="./swagger-client/swagger-client.html">
 
 <script>
-(() => {
+{
   'use strict';
   /**
-   * @customElement
-   * @polymer
-   */
-  class ExmgSwagger20App extends Polymer.Element {
-    static get is() { return 'exmg-swagger2-0-app'; }
+  * Data connection Polymer element that connects using a swagger 2.0 schema and a restfull API server.
+  *
+  * <exmg-data-connection
+  *   resource="globalData"
+  *   method="get"
+  *   server-url="https://backend.winview-dev-feature.playtotv.com/api/"
+  *   error="{{error}}"
+  *   data="{{data}}"
+  *   auto="true"
+  * ></exmg-data-connection>
+  *
+  * @customElement
+  * @polymer
+  * @demo //localhost:8081/demo/
+  * @memberof Exmg
+  * @extends Polymer.Element
+  * @summary Custom element to connect to a restfull API layer using a Swagger 2.0 schema
+  */
+
+  class DataConnectionElement extends Polymer.Element {
+    static get is() { return 'exmg-data-connection'; }
     static get properties() {
       return {
         resource: {
@@ -55,6 +71,8 @@
 
       new SwaggerClient(this.swaggerUrl, { url: this.serverUrl }).then((swaggerClient) => {
         this.swaggerClient = swaggerClient;
+        this.swaggerClient.url = this.serverUrl;
+        this.swaggerClient.spec.basePath = '/api';
 
         if (this.auto) {
           this.generateRequest();
@@ -62,15 +80,16 @@
       });
     }
 
+    /**
+     * Handles data call and returns error or data.
+     *
+     **/
+
     generateRequest() {
       if (!this.swaggerClient) {
         return false;
       }
 
-      this.handleCall();
-    }
-
-    handleCall() {
       const resource = this._resourceAvailable();
       const method = this._methodAvailable();
 
@@ -82,20 +101,19 @@
         return this.set('error', method.error);
       }
 
-      this.swaggerClient.url = this.serverUrl;
-      this.swaggerClient.spec.basePath = '/api';
-
       this.swaggerClient.apis[resource][method]().then(
-        data =>
-          this.set('data', data.obj),
-        error =>
-          this.set('error', error)
-      );
+        data => this.set('data', data.obj),
+        error => this.set('error', error));
     }
+
+    /**
+     * Checks if Resource is available in Swagger 2.0 schema
+     *
+     **/
 
     _resourceAvailable() {
       if (!this.resource) {
-        return ({ error: 'No resource given' });
+        return ({ error: `No resource given` });
       }
 
       const isAvailable = this.swaggerClient.spec.tags.find(tag => tag.name === this.resource);
@@ -104,12 +122,17 @@
         return isAvailable.name;
       }
 
-      return ({ error: 'Resource not found: ' + resource });
+      return ({ error: `Resource ${this.resource} not found` });
     }
+
+    /**
+     * Checks if Method is available in Swagger 2.0 schema
+     *
+     **/
 
     _methodAvailable() {
       if (!this.method) {
-        return ({ error: 'No method given' });
+        return ({ error: `No method given` });
       }
 
       const { apis } = this.swaggerClient;
@@ -120,10 +143,16 @@
         }
       }
 
-      return ({ error: 'Method not found: ' + this.method });
+      return ({ error: `Method ${this.method} not found` });
     }
   }
 
-  window.customElements.define(ExmgSwagger20App.is, ExmgSwagger20App);
-})();
+  window.customElements.define(DataConnectionElement.is, DataConnectionElement);
+
+  /**
+   * @namespace Exmg
+   */
+  window.Exmg = window.Exmg || {};
+  Exmg.DataConnectionElement = DataConnectionElement;
+}
 </script>

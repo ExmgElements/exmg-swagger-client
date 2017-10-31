@@ -4,52 +4,49 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>exmg-swagger2-0</title>
+    <title>exmg-data-connection</title>
     <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-    <link rel="import" href="../exmg-swagger2-0-app.html">
+    <link rel="import" href="../exmg-data-connection.html">
   </head>
   <body>
-    <dom-module id="x-demo">
-        <template>
-          <custom-style>
-            <style is="custom-style">
-              .shadow-8dp { @apply --shadow-elevation-8dp; }
-              .shadow {
-                display: inline-block;
-                padding: 8px;
-                margin: 16px;
-              }
-            </style>
-          </custum-style>
-          <h1>Swagger 2.0 client component</h1>
-          <paper-card heading="Response Swagger call" class="shadow shadow-8dp">
-            <div class="card-content">
-              <template is="dom-if" if="[[error]]">
-                Error: [[error]]
-              </template>
-              <template is="dom-if" if="[[data]]">
-                data: [[data]]
-              </template>
-            </div>
-          </paper-card>
-          <exmg-swagger2-0-app
-            resource="globalData"
-            method="get"
-            server-url="https://backend.winview-dev-feature.playtotv.com/api/"
-            error="{{error}}"
-            data="{{data}}"
-            auto="true"
-          ></exmg-swagger2-0-app>
-        </template>
-        <script>
-        window.addEventListener('WebComponentsReady', function() {
-          class XDemo extends Polymer.Element {
-            static get is() { return 'x-demo'; }
+    <dom-module id="data-connection-demo">
+      <template>
+        <custom-style>
+          <style is="custom-style">
+          </style>
+        </custum-style>
+        <h1>Exmg Data Connection Element</h1>
+        <paper-card heading="Response Swagger call">
+          <div class="card-content">
+            <template is="dom-if" if="[[error]]">
+              Error: [[error]]
+            </template>
+            <template is="dom-if" if="[[data]]">
+              data: [[data]]
+            </template>
+          </div>
+        </paper-card>
+        <exmg-data-connection
+          resource="globalData"
+          method="get"
+          server-url="https://backend.winview-dev-feature.playtotv.com/api/"
+          error="{{error}}"
+          data="{{data}}"
+          auto
+        ></exmg-data-connection>
+      </template>
+      <script>
+      window.addEventListener('WebComponentsReady', function() {
+        class DataConnectionDemo extends Polymer.Element {
+          static get is() { return 'data-connection-demo'; }
+          constructor() {
+            super();
           }
-          window.customElements.define(XDemo.is, XDemo);
-        });
-        </script>
-      </dom-module>
-      <x-demo></x-demo>
+        }
+        window.customElements.define(DataConnectionDemo.is, DataConnectionDemo);
+      });
+      </script>
+    </dom-module>
+    <data-connection-demo></data-connection-demo>
   </body>
 </html>

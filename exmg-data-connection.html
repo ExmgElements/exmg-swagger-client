@@ -1,6 +1,3 @@
-<link rel="import" href="./bower_components/polymer/polymer-element.html">
-<link rel="import" href="./swagger-client/swagger-client.html">
-
 <script>
   'use strict';
   {
@@ -37,17 +34,6 @@
         method: {
           type: String,
         },
-        swaggerUrl: {
-          type: String,
-          value: '/src/swagger.json',
-        },
-        serverUrl: {
-          type: String,
-          notify: true,
-        },
-        swaggerClient: {
-          type: Object,
-        },
         error: {
           type: Object,
           notify: true,
@@ -81,29 +67,22 @@
     constructor() {
       super();
 
-      // TODO: Move api creation outside element and load it in Exmg namespace (once)
-      new SwaggerClient(this.swaggerUrl, { url: this.serverUrl }).then((swaggerClient) => {
-        this.swaggerClient = swaggerClient;
-        this.swaggerClient.url = this.serverUrl;
-        this.swaggerClient.spec.basePath = '/api';
-
-        // TODO: Trigger generating request on init and on param change (see at iron-ajax)
-        if (this.auto) {
-          this.handleRequest();
-        }
-      });
+      if (this.auto) {
+        this.generateRequest();
+      }
     }
 
-    /*
-      Check if plugin is loaded, if not retry
-    */
+    /**
+    * Check if plugin is loaded, if not retry
+    *
+    **/
     generateRequest() {
-
       // TODO: Add logging of errors and warnings
-      if (!this.swaggerClient) {
+      if (!Exmg.DataConnectionConfig) {
         return new Promise((resolve) => {
-          setTimeout(() => {
-            if (this.swaggerClient) {
+          const retryInterval = setInterval(() => {
+            if (Exmg.DataConnectionConfig) {
+              clearInterval(retryInterval);
               resolve(this.handleRequest());
             }
           }, this.retryTimerSwaggerClient);
@@ -129,7 +108,7 @@
         return this.set('error', method.error);
       }
 
-      this.swaggerClient.apis[resource][method]().then(
+      Exmg.DataConnectionConfig.apis[resource][method]().then(
         data => this.set('data', data.obj),
         error => this.set('error', error));
 
@@ -146,7 +125,7 @@
         return ({ error: `No resource given` });
       }
 
-      const isAvailable = this.swaggerClient.spec.tags.find(tag => tag.name === this.resource);
+      const isAvailable = Exmg.DataConnectionConfig.spec.tags.find(tag => tag.name === this.resource);
 
       if (isAvailable) {
         return isAvailable.name;
@@ -165,7 +144,7 @@
         return ({ error: `No method given` });
       }
 
-      const { apis } = this.swaggerClient;
+      const { apis } = Exmg.DataConnectionConfig;
 
       for (var key in apis[this.resource]) {
         if (this.method === key ) {

@@ -34,11 +34,11 @@
         method: {
           type: String,
         },
-        error: {
+        lastError: {
           type: Object,
           notify: true,
         },
-        data: {
+        lastResponse: {
           type: Object,
           notify: true,
         },
@@ -109,10 +109,8 @@
       }
 
       Exmg.DataConnectionConfig.apis[resource][method]().then(
-        data => this.set('data', data.obj),
-        error => this.set('error', error));
-
-      // TODO: Also throw events on success and error in a similar fashion on iron-ajax
+        data => this.set('lastResponse', data.obj),
+        error => this.set('lastError', error));
     }
 
     /**

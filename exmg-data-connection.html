@@ -188,7 +188,7 @@
         this._debouncer,
         Polymer.Async.timeOut.after(this.debounceDuration),
         () => {
-          if (!this.method & !this.resource) {
+          if (!this.method && !this.resource) {
             return null;
           }
 

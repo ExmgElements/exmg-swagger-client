@@ -20,6 +20,8 @@
     "valid-jsdoc": "off"
   },
   "globals": {
-    "Polymer": true
+    "Polymer": true,
+    "Exmg": true,
+    "SwaggerClient": true
   }
 }

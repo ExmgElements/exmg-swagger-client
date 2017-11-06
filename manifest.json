@@ -1,7 +1,0 @@
-{
-  "name": "exmg-swagger2-0",
-  "short_name": "exmg-swagger2-0",
-  "description": "component to connect through swagger 2.0",
-  "start_url": "/",
-  "display": "standalone"
-}

@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
     <title>exmg-data-connection</title>
-    <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../paper-card/paper-card.html">
 
     <link rel="import" href="../exmg-data-connection.html">
   </head>
@@ -33,7 +36,7 @@
         ></exmg-data-connection>
       </template>
       <script>
-        HTMLImports.whenReady(function() {
+        window.addEventListener('WebComponentsReady', function() {
           class DataConnectionDemo extends Polymer.Element {
             static get is() { return 'data-connection-demo'; }
             constructor() {
@@ -50,6 +53,7 @@
         });
       </script>
     </dom-module>
+
     <data-connection-demo></data-connection-demo>
   </body>
 </html>

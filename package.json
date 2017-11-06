@@ -1,14 +1,29 @@
 {
   "name": "exmg-data-connection",
+  "private": true,
   "version": "1.0.0",
   "description": "Data Connection via Swagger 2.0.",
   "main": "exmg-data-connection.html",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@bitbucket.org/exmachina/exmg-swagger2.0.git"
+  "repository": "ExmgElements/exmg-data-connection",
+  "keywords": [
+    "Exmg",
+    "ExmgElements",
+    "exmg-data-connection",
+    "web-components",
+    "web-component",
+    "polymer"
+  ],
+  "author": "Ex Machina",
+  "devDependencies": {
+    "bower": "latest",
+    "eslint": "^4.0.0",
+    "eslint-plugin-html": "^3.0.0",
+    "polymer-cli": "^1.2.0"
   },
-  "author": "",
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/exmachina/exmg-data-connection#readme",
-  "devDependencies": {}
+  "homepage": "https://github.com/ExmgElements/",
+  "scripts": {
+    "lint": "polymer lint --rules polymer-2 --input *.html",
+    "eslint": "eslint . --ext js,html --ignore-path .gitignore",
+    "analyze": "polymer analyze --input exmg-data-connection.html > analysis.json"
+  }
 }

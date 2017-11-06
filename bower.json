@@ -1,15 +1,27 @@
 {
   "name": "exmg-data-connection",
-  "description": "component to connect through swagger 2.0",
-  "main": "index.html",
+  "version": "1.0.4",
+  "description": "Component to connect through swagger 2.0",
+  "authors": [
+    "Ex Machina Group"
+  ],
+  "keywords": [
+    "web-components",
+    "polymer",
+    "websocket"
+  ],
+  "main": "exmg-data-connection.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0",
-    "iron-ajax": "^2.0.5",
-    "paper-card": "PolymerElements/paper-card#^2.0.0",
-    "paper-styles": "PolymerElements/paper-styles#^2.0.0"
+    "polymer": "Polymer/polymer#^2.0.0"
   },
   "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "paper-card": "PolymerElements/paper-card#^2.0.0",
+    "iron-component-page": "^3.0.1"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
   }
 }

@@ -1,13 +1,9 @@
-<link rel="import" href="./bower_components/polymer/polymer.html">
 <link rel="import" href="./bower_components/polymer/polymer-element.html">
-<link rel="import" href="./bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="./bower_components/paper-card/paper-card.html">
-<link rel="import" href="./bower_components/paper-styles/default-theme.html">
 <link rel="import" href="./swagger-client/swagger-client.html">
 
 <script>
-(() => {
   'use strict';
+  {
   /**
   * Data connection Polymer element that connects using a swagger 2.0 schema and a restfull API server.
   *
@@ -22,16 +18,18 @@
   *
   * @customElement
   * @polymer
-  * @demo //localhost:8081/demo/
+  * @group Exmg Core Elements
+  * @element exmg-data-connection
+  * @demo demo/index.html
   * @memberof Exmg
   * @extends Polymer.Element
   * @summary Custom element to connect to a restfull API layer using a Swagger 2.0 schema
   */
-
   class DataConnectionElement extends Polymer.Element {
     static get is() { return 'exmg-data-connection'; }
     static get properties() {
       return {
+        // TODO: Add documentation for properties
         resource: {
           type: String,
           value: ''
@@ -63,26 +61,33 @@
           notify: true,
           value: false,
         },
-        search: {
-          type: String,
-          observer: "_findResults"
-        },
         retryTimerSwaggerClient: {
           type: Number,
           readOnly: true,
-          value: 250
-        }
+          value: 250,
+        },
+        /**
+         * By default, exmg-data-connection events do not bubble. Setting this attribute will cause its
+         * events to bubble to the window object.
+         */
+        // TODO: add bubble option in events
+        bubbles: {
+          type: Boolean,
+          value: false
+        },
       };
     }
 
     constructor() {
       super();
 
+      // TODO: Move api creation outside element and load it in Exmg namespace (once)
       new SwaggerClient(this.swaggerUrl, { url: this.serverUrl }).then((swaggerClient) => {
         this.swaggerClient = swaggerClient;
         this.swaggerClient.url = this.serverUrl;
         this.swaggerClient.spec.basePath = '/api';
 
+        // TODO: Trigger generating request on init and on param change (see at iron-ajax)
         if (this.auto) {
           this.handleRequest();
         }
@@ -92,8 +97,9 @@
     /*
       Check if plugin is loaded, if not retry
     */
-
     generateRequest() {
+
+      // TODO: Add logging of errors and warnings
       if (!this.swaggerClient) {
         return new Promise((resolve) => {
           setTimeout(() => {
@@ -126,6 +132,8 @@
       this.swaggerClient.apis[resource][method]().then(
         data => this.set('data', data.obj),
         error => this.set('error', error));
+
+      // TODO: Also throw events on success and error in a similar fashion on iron-ajax
     }
 
     /**
@@ -176,5 +184,5 @@
    */
   window.Exmg = window.Exmg || {};
   Exmg.DataConnectionElement = DataConnectionElement;
-})();
+}
 </script>

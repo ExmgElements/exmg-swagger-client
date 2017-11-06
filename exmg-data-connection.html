@@ -52,16 +52,39 @@
           readOnly: true,
           value: 250,
         },
+        debounceDuration: {
+          type: Number,
+          readOnly: true,
+          value: 0,
+        },
         /**
          * By default, exmg-data-connection events do not bubble. Setting this attribute will cause its
          * events to bubble to the window object.
          */
         // TODO: add bubble option in events
+
+        /**
+         * Fired when a response is received.
+         *
+         * @event response
+         */
+
+        /**
+         * Fired when an error is received.
+         *
+         * @event error
+         */
+
         bubbles: {
           type: Boolean,
           value: false
         },
       };
+    }
+    static get observers() {
+      return [
+        '_requestOptionsChanged(resource, method, auto, retryTimerSwaggerClient, debounceDuration)'
+      ]
     }
 
     constructor() {
@@ -109,8 +132,15 @@
       }
 
       Exmg.DataConnectionConfig.apis[resource][method]().then(
-        data => this.set('lastResponse', data.obj),
-        error => this.set('lastError', error));
+        data => {
+          new CustomEvent('response', data, { bubbles: true, composed: true });
+          return this.set('lastResponse', data.obj);
+        },
+        error => {
+          new CustomEvent('error', error, { bubbles: true, composed: true });
+          return this.set('lastError', error);
+        }
+      );
     }
 
     /**
@@ -152,6 +182,21 @@
 
       return ({ error: `Method ${this.method} not found` });
     }
+
+    _requestOptionsChanged() {
+      this._debouncer = Polymer.Debouncer.debounce(
+        this._debouncer,
+        Polymer.Async.timeOut.after(this.debounceDuration),
+        () => {
+          if (!this.method & !this.resource) {
+            return null;
+          }
+
+          if (this.auto) {
+            this.generateRequest();
+          }
+        });
+    };
   }
 
   window.customElements.define(DataConnectionElement.is, DataConnectionElement);

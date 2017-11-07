@@ -10,12 +10,13 @@
 
     <link rel="import" href="../../paper-card/paper-card.html">
 
-    <link rel="import" href="../swagger-client/swagger-client.html">
+    <link rel="import" href="../exmg-data-connection-config.html">
     <link rel="import" href="../exmg-data-connection.html">
   </head>
   <body>
     <dom-module id="data-connection-demo">
       <template>
+
         <h1>Exmg Data Connection Element</h1>
         <paper-card heading="Response Swagger call">
           <div class="card-content">
@@ -27,23 +28,53 @@
             </template>
           </div>
         </paper-card>
+
+        <!-- Initialize swagger client api -->
+        <exmg-data-connection-config
+          swagger-url="data/swagger.json"
+          server-url="https://backend.winview-dev-feature.playtotv.com/"
+          api-ready="{{apiReady}}"
+        ></exmg-data-connection-config>
+
+        <!-- Create call to globalData.get -->
+        <template is="dom-if" if="[[apiReady]]" restamp="true">
+          <exmg-data-connection
+            resource="globalData"
+            method="get"
+            last-error="{{error}}"
+            last-response="{{data}}"
+            auto></exmg-data-connection>
+        </template>
+
         <exmg-data-connection
-          id="data-connection-wv"
-          resource="globalData"
-          method="get"
+          id="connection"
+          resource="gatekeeper"
+          method="getInit1"
           last-error="{{error}}"
-          last-response="{{data}}"
-        ></exmg-data-connection>
+          last-response="{{data}}"></exmg-data-connection>
+
       </template>
       <script>
         window.addEventListener('WebComponentsReady', function() {
           class DataConnectionDemo extends Polymer.Element {
             static get is() { return 'data-connection-demo'; }
-            ready() {
-              super.ready();
-
-              const DataConnectionElement = Polymer.dom(this.root).querySelector('#data-connection-wv');
-              DataConnectionElement.generateRequest();
+            static get properties() {
+              return {
+                apiReady: {
+                  type: Boolean,
+                  observer: '_apiReady',
+                },
+              };
+            }
+            _apiReady() {
+              if(Exmg.DataConnectionConfig) {
+                console.log('Exmg.DataConnectionConfig.apis', Exmg.DataConnectionConfig);
+                this.$.connection.generateRequest().then((response) => {
+                  console.log('gatekeeper.getInit1', response);
+                }).catch((e) => {
+                  console.error('gatekeeper.getInit1', e);
+                });
+              }
             }
           }
           window.customElements.define(DataConnectionDemo.is, DataConnectionDemo);

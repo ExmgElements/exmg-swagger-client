@@ -1,3 +1,5 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
 <script>
   'use strict';
   {
@@ -34,14 +36,33 @@
         method: {
           type: String,
         },
-        lastError: {
-          type: Object,
-          notify: true,
-        },
+        /**
+         * lastRequest's response.
+         *
+         * Note that lastResponse and lastError are set when lastRequest finishes.
+         *
+         * @type {Object}
+         */
         lastResponse: {
           type: Object,
           notify: true,
+          readOnly: true
         },
+
+        /**
+         * lastRequest's error, if any.
+         *
+         * @type {Object}
+         */
+        lastError: {
+          type: Object,
+          notify: true,
+          readOnly: true
+        },
+        /**
+         * If true, automatically performs an Ajax request when either `url` or
+         * `params` changes.
+         */
         auto: {
           type: Boolean,
           notify: true,
@@ -52,10 +73,21 @@
           readOnly: true,
           value: 250,
         },
+        /**
+         * Length of time in milliseconds to debounce multiple automatically generated requests.
+         */
         debounceDuration: {
           type: Number,
           readOnly: true,
           value: 0,
+        },
+        /**
+         * The most recent request made.
+         */
+        lastRequest: {
+          type: Object,
+          notify: true,
+          readOnly: true
         },
         /**
          * By default, exmg-data-connection events do not bubble. Setting this attribute will cause its
@@ -74,80 +106,86 @@
          *
          * @event error
          */
-
         bubbles: {
           type: Boolean,
           value: false
         },
+        /**
+         * True while request is in flight.
+         */
+        loading: {
+          type: Boolean,
+          notify: true,
+          readOnly: true
+        },
+
+        _boundHandleResponse: {
+          type: Function,
+        }
       };
     }
     static get observers() {
       return [
-        '_requestOptionsChanged(resource, method, auto, retryTimerSwaggerClient, debounceDuration)'
+        '_requestOptionsChanged(resource, method, auto, debounceDuration)'
       ]
     }
 
     constructor() {
       super();
-
-      if (this.auto) {
-        this.generateRequest();
-      }
+      this._boundHandleResponse = this._handleResponse.bind(this);
+      this._boundHandleError = this._handleError.bind(this);
     }
 
     /**
-    * Check if plugin is loaded, if not retry
-    *
-    **/
-    generateRequest() {
-      // TODO: Add logging of errors and warnings
-      if (!Exmg.DataConnectionConfig) {
-        return new Promise((resolve) => {
-          const retryInterval = setInterval(() => {
-            if (Exmg.DataConnectionConfig) {
-              clearInterval(retryInterval);
-              resolve(this.handleRequest());
-            }
-          }, this.retryTimerSwaggerClient);
-        });
-      }
-      this.handleRequest();
-    }
-
-    /**
-     * Handles data call and returns error or data.
+     * Performs an AJAX request using the swagger api.
      *
-     **/
+     */
+    generateRequest() {
+      if(!Exmg.DataConnectionConfig) {
+        throw new Error('Data connection config not loaded!');
+      }
 
-    handleRequest() {
       const resource = this._resourceAvailable();
       const method = this._methodAvailable();
 
       if (resource.error) {
-        return this.set('error', resource.error);
+        throw new Error(resource.error);
       }
 
       if (method.error) {
-        return this.set('error', method.error);
+        throw new Error(method.error);
       }
 
-      Exmg.DataConnectionConfig.apis[resource][method]().then(
-        data => {
-          new CustomEvent('response', data, { bubbles: true, composed: true });
-          return this.set('lastResponse', data.obj);
-        },
-        error => {
-          new CustomEvent('error', error, { bubbles: true, composed: true });
-          return this.set('lastError', error);
-        }
+      const request = Exmg.DataConnectionConfig.apis[resource][method]();
+
+      request.then(
+        this._boundHandleResponse
+      ).catch(
+        this._boundHandleError
       );
+      this._setLoading(true);
+
+      return request;
+    }
+
+    _handleError(error) {
+      this._setLastError({error: error});
+      this._setLastResponse(null);
+      this._setLoading(false);
+      this.dispatchEvent(new CustomEvent('error', { bubbles: this.bubbles, composed: true, detail: {error: error} }));
+    }
+
+    _handleResponse(response) {
+      this._setLastResponse(response);
+      this._setLastError(null);
+      this._setLoading(false);
+      this.dispatchEvent(new CustomEvent('response', { bubbles: this.bubbles, composed: true, detail: response }));
     }
 
     /**
      * Checks if Resource is available in Swagger 2.0 schema
      *
-     **/
-
+     */
     _resourceAvailable() {
       if (!this.resource) {
         return ({ error: `No resource given` });
@@ -165,8 +203,7 @@
     /**
      * Checks if Method is available in Swagger 2.0 schema
      *
-     **/
-
+     */
     _methodAvailable() {
       if (!this.method) {
         return ({ error: `No method given` });
@@ -191,12 +228,11 @@
           if (!this.method && !this.resource) {
             return null;
           }
-
           if (this.auto) {
             this.generateRequest();
           }
         });
-    };
+    }
   }
 
   window.customElements.define(DataConnectionElement.is, DataConnectionElement);

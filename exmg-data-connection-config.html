@@ -1,0 +1,48 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="exmg-data-connection-import.html">
+
+<script>
+  'use strict';
+  {
+    /**
+    * Data connection Config - Polymer element that inits swaggerClient through config to access globaly
+    *
+    **/
+    class DataConnectionConfigElement extends Polymer.Element {
+      static get is() { return 'exmg-data-connection-config'; }
+      static get properties() {
+        return {
+          swaggerUrl: {
+            type: String,
+          },
+          serverUrl: {
+            type: String,
+          },
+          apiReady: {
+            type: Boolean,
+            notify: true,
+            value: false,
+          }
+        }
+      }
+      connectedCallback () {
+        super.connectedCallback();
+        if (!Exmg.DataConnectionConfig) {
+          new SwaggerClient(this.swaggerUrl, { url: this.serverUrl }).then((swaggerClient) => {
+            Exmg.DataConnectionConfig = swaggerClient;
+            Exmg.DataConnectionConfig.url = this.serverUrl;
+            Exmg.DataConnectionConfig.spec.basePath = '/api';
+            this.apiReady = true;
+          });
+        }
+      }
+    }
+    window.customElements.define(DataConnectionConfigElement.is, DataConnectionConfigElement);
+
+    /**
+     * @namespace Exmg
+     */
+    window.Exmg = window.Exmg || {};
+    Exmg.DataConnectionConfigElement = DataConnectionConfigElement;
+  }
+</script>

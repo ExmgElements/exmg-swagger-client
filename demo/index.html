@@ -8,72 +8,266 @@
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
+    <link rel="import" href="../../polymer/lib/mixins/gesture-event-listeners.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../../paper-card/paper-card.html">
+    <link rel="import" href="../../iron-input/iron-input.html">
+    <link rel="import" href="../../iron-form/iron-form.html">
 
     <link rel="import" href="../exmg-data-connection-config.html">
     <link rel="import" href="../exmg-data-connection.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
   </head>
   <body>
     <dom-module id="data-connection-demo">
       <template>
+        <custom-style>
+          <style>
+            pre {
+              background: white;
+              padding: 22px;
+            }
+            select,
+            input {
+              width: 450px;
+              padding: 6px;
+            }
+            input.small{
+              width: 150px;
+            }
+            select {
+              background: white;
+              border: 1px solid #ccc;
+              border-radius: 1px;
+              font-size: 12px;
+              height: 29px;
+              padding: 5px;
+            }
+            button {
+              padding: 6px;
+              background: #c7bfbf;
+              color: black;
+              min-width: 100px;
+              border: none;
+            }
+            label > span{
+              display: block;
+              margin: 16px 0 6px 0;
+            }
+            p{
+              margin: 16px 4px !important;
+            }
+          </style>
+        </custom-style>
 
-        <h1>Exmg Data Connection Element</h1>
-        <paper-card heading="Response Swagger call">
-          <div class="card-content">
-            <template is="dom-if" if="[[error]]">
-              Error: [[error]]
-            </template>
-            <template is="dom-if" if="[[data]]">
-              data: [[data]]
+        <div class="centered">
+          <!-- Initialize swagger client api -->
+          <exmg-data-connection-config
+            swagger-url="[[swaggerUrl]]"
+            server-url="[[serverUrl]]"
+            api-ready="{{apiReady}}"></exmg-data-connection-config>
+
+          <!-- Connection element enabled after swagger api is initialized -->
+          <template is="dom-if" if="[[apiReady]]" restamp="true">
+            <exmg-data-connection
+              id="connection"
+              api="[[api]]"
+              operation-id="[[operationId]]"
+              last-error="{{lastError}}"
+              last-response="{{lastResponse}}"></exmg-data-connection>
+          </template>
+
+          <h3>exmg-data-connection demo</h3>
+
+          <div>
+            <!-- Swagger Url -->
+            <label>
+              <span>Swagger Url</span>
+              <iron-input bind-value="{{swaggerUrl}}">
+                <input>
+              </iron-input>
+            </label>
+
+            <!-- Server Url -->
+            <label>
+              <span>Server Url</span>
+              <iron-input bind-value="{{serverUrl}}">
+                <input>
+              </iron-input>
+            </label>
+            <label>
+          </div>
+
+          <div>
+            <!-- Paths -->
+            <label>
+              <span>Paths</span>
+              <iron-input bind-value="{{selectedPathName}}">
+                <select aria-label="Paths">
+                   <option>-Select Path-</option>
+                  <template is="dom-repeat" items="[[pathOptions]]" index-as="index">
+                   <option value="[[item.path]]">[[item.path]]</option>
+                  </template>
+                </select>
+              </iron-input>
+            </label>
+
+            <!-- Methods available for selected path -->
+            <template is="dom-if" if="[[selectedPath]]" restamp="true">
+              <label>
+                <span>Methods</span>
+                <iron-input bind-value="{{selectedMethodType}}">
+                  <select aria-label="Method">
+                    <option>-Select Method-</option>
+                    <template is="dom-repeat" items="[[selectedPath]]" index-as="index">
+                     <option value="[[item.method]]">[[item.method]]</option>
+                    </template>
+                  </select>
+                </iron-input>
+              </label>
             </template>
           </div>
-        </paper-card>
 
-        <!-- Initialize swagger client api -->
-        <exmg-data-connection-config
-          swagger-url="data/swagger.json"
-          server-url="https://backend.winview-dev-feature.playtotv.com/"
-          api-ready="{{apiReady}}"
-        ></exmg-data-connection-config>
+          <!-- Params needed for selected path/method -->
+          <template is="dom-if" if="[[selectedMethod]]" restamp="true">
+            <iron-form id="form">
+              <form>
+                <div>
+                  <template is="dom-repeat" items="[[selectedMethod.parameters]]" index-as="index">
+                    <label>
+                      <span>[[item.name]] <template is="dom-if" if="[[item.required]]" restamp="true"><strong> * </strong></template> ([[item.description]] - [[item.type]])</span>
+                      <input name="[[item.name]]">
+                    </label>
+                  </template>
+                </div>
+                <br>
+                <button on-tap="_submit">[[selectedMethodType]]</button> (* required)
+              </form>
+            </iron-form>
+          </template>
 
-        <!-- Create call to globalData.get -->
-        <template is="dom-if" if="[[apiReady]]" restamp="true">
-          <exmg-data-connection
-            resource="globalData"
-            method="get"
-            last-error="{{error}}"
-            last-response="{{data}}"
-            auto></exmg-data-connection>
-        </template>
-
-        <exmg-data-connection
-          id="connection"
-          resource="gatekeeper"
-          method="getInit1"
-          last-error="{{error}}"
-          last-response="{{data}}"></exmg-data-connection>
-
+          <hr>
+          <pre><template is="dom-repeat" items="[[history]]" index-as="index">[[item.date]] - [[item.data]]<br></template></pre>
+        </div>
       </template>
       <script>
         window.addEventListener('WebComponentsReady', function() {
-          class DataConnectionDemo extends Polymer.Element {
+          class DataConnectionDemo extends Polymer.GestureEventListeners(Polymer.Element) {
             static get is() { return 'data-connection-demo'; }
             static get properties() {
               return {
+                history: {
+                  type: Array,
+                  value: () => [],
+                },
+                lastResponse: {
+                  type: Object,
+                  observer: '_handleNewData',
+                },
+                lastError: {
+                  type: Object,
+                  observer: '_handleError',
+                },
+                swaggerUrl: {
+                  type: String,
+                  /*value: 'data/swagger.json',*/
+                  value: 'http://petstore.swagger.io/v2/swagger.json',
+                },
+                serverUrl: {
+                  type: String,
+                  value: 'http://swagger.io',
+                  /*value: 'https://backend.winview-dev-feature.playtotv.com/',*/
+                },
                 apiReady: {
                   type: Boolean,
                   observer: '_apiReady',
                 },
+                api: {
+                  type: String,
+                },
+                operationId: {
+                  type: String,
+                },
+                pathOptions: {
+                  type: Array,
+                },
+                selectedPathName: {
+                  type: String,
+                  observer: '_pathNameChanged',
+                },
+                selectedPath: {
+                  type: Object,
+                  computed: '_selectedPathChanged(selectedPathName)',
+                },
+                selectedMethodType: {
+                  type: String,
+                  observer: '_methodTypeChanged',
+                },
+                selectedMethod: {
+                  type: Object,
+                  computed: '_selectedMethodChanged(selectedMethodType)',
+                },
               };
+            }
+            static get observers() {
+              return [];
+            }
+            _submit() {
+              let form = this.shadowRoot.querySelector('#form');
+              console.log('submit', form, form.serializeForm());
+              let connection = this.shadowRoot.querySelector('#connection');
+              connection.resource = this.selectedMethod.tags[0];
+              connection.method = this.selectedMethod.operationId;
+              connection.params = form.serializeForm();
+              connection.generateRequest();
+            }
+            _pathNameChanged() {
+              this.set('selectedMethodType', null);
+            }
+            _methodTypeChanged(type) {
+              if(type) {
+                this.set('api', this.selectedMethod.tags[0]);
+                this.set('operationId', this.selectedMethod.operationId);
+              }
+            }
+            _selectedMethodChanged(method) {
+              let m = this.selectedPath.find((p) => p.method === method);
+              return m ? m.obj : null;
+            }
+            _selectedPathChanged(path) {
+              let obj = this.pathOptions.find(po => po.path === path).obj;
+              return Object.keys(obj).map((k) => ({method: k, obj: obj[k]}));
+            }
+            _addLog(d) {
+              let date = new Intl.DateTimeFormat('en-US', {
+                hour: 'numeric', minute: 'numeric', second: 'numeric',
+              }).format();
+              this.push('history', {date: date, data: d});
+            }
+            _handleError(e) {
+              if(e) {
+                this._addLog(JSON.stringify(e, null, '\t'));
+              }
+            }
+            _handleNewData(d) {
+              if(d) {
+                this._addLog(`Request URL: ${d.url}`);
+                this._addLog(`Status Code: ${d.status}`);
+                this._addLog(`Status Text: ${d.statusText}`);
+                this._addLog(`Headers: ${JSON.stringify(d.headers)}`);
+                this._addLog(`Response Body: ` + JSON.stringify(d.body, null, '\t'));
+              }
             }
             _apiReady() {
               if(Exmg.DataConnectionConfig) {
-                console.log('Exmg.DataConnectionConfig.apis', Exmg.DataConnectionConfig);
-                this.$.connection.generateRequest().then((response) => {
-                  console.log('gatekeeper.getInit1', response);
-                }).catch((e) => {
-                  console.error('gatekeeper.getInit1', e);
-                });
+                this._addLog('Swagger Client Initialised');
+                console.log('Exmg.DataConnectionConfig', Exmg.DataConnectionConfig);
+                this.set('pathOptions', Object.keys(Exmg.DataConnectionConfig.spec.paths).map((k) => ({path: k,obj: Exmg.DataConnectionConfig.spec.paths[k]})));
               }
             }
           }

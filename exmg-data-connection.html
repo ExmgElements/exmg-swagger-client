@@ -7,8 +7,8 @@
   * Data connection Polymer element that connects using a swagger 2.0 schema and a restfull API server.
   *
   * <exmg-data-connection
-  *   resource="globalData"
-  *   method="get"
+  *   api="globalData"
+  *   operationId="get"
   *   server-url="https://backend.winview-dev-feature.playtotv.com/api/"
   *   error="{{error}}"
   *   data="{{data}}"
@@ -28,14 +28,31 @@
     static get is() { return 'exmg-data-connection'; }
     static get properties() {
       return {
-        // TODO: Add documentation for properties
-        resource: {
-          type: String,
-          value: ''
-        },
-        method: {
+        /**
+         * Available Api's
+         */
+        api: {
           type: String,
         },
+
+        /**
+         * Is a unique key within the spec
+         */
+        operationId: {
+          type: String,
+        },
+
+        /**
+         * An object that contains query parameters to be appended to the
+         * specified `url` when generating a request. If you wish to set the body
+         * content when making a POST request, you should use the `body` property
+         * instead.
+        */
+        params: {
+          type: Object,
+          value: () => ({}),
+        },
+
         /**
          * lastRequest's response.
          *
@@ -59,6 +76,7 @@
           notify: true,
           readOnly: true
         },
+
         /**
          * If true, automatically performs an Ajax request when either `url` or
          * `params` changes.
@@ -68,11 +86,7 @@
           notify: true,
           value: false,
         },
-        retryTimerSwaggerClient: {
-          type: Number,
-          readOnly: true,
-          value: 250,
-        },
+
         /**
          * Length of time in milliseconds to debounce multiple automatically generated requests.
          */
@@ -81,6 +95,7 @@
           readOnly: true,
           value: 0,
         },
+
         /**
          * The most recent request made.
          */
@@ -89,22 +104,10 @@
           notify: true,
           readOnly: true
         },
+
         /**
          * By default, exmg-data-connection events do not bubble. Setting this attribute will cause its
          * events to bubble to the window object.
-         */
-        // TODO: add bubble option in events
-
-        /**
-         * Fired when a response is received.
-         *
-         * @event response
-         */
-
-        /**
-         * Fired when an error is received.
-         *
-         * @event error
          */
         bubbles: {
           type: Boolean,
@@ -122,11 +125,24 @@
         _boundHandleResponse: {
           type: Function,
         }
+
+        /**
+         * Fired when a response is received.
+         *
+         * @event response
+         */
+
+        /**
+         * Fired when an error is received.
+         *
+         * @event error
+         */
       };
     }
+
     static get observers() {
       return [
-        '_requestOptionsChanged(resource, method, auto, debounceDuration)'
+        '_requestOptionsChanged(api, operationId, auto, debounceDuration)'
       ]
     }
 
@@ -145,24 +161,32 @@
         throw new Error('Data connection config not loaded!');
       }
 
-      const resource = this._resourceAvailable();
-      const method = this._methodAvailable();
+      const api = this._apiAvailable();
+      console.log('generateRequest', api, this.operationId, this.params);
 
-      if (resource.error) {
-        throw new Error(resource.error);
+      if (api.error) {
+        this._handleError(api.error);
+        return Promise.reject(new Error(api.error));
       }
 
-      if (method.error) {
-        throw new Error(method.error);
+      const { apis } = Exmg.DataConnectionConfig;
+
+      if (typeof apis[api][this.operationId] !== 'function') {
+        this._handleError(`Operation Id ${this.operationId} not found`);
+        return Promise.reject(new Error(this._getLastError()));
       }
 
-      const request = Exmg.DataConnectionConfig.apis[resource][method]();
+      const request = Exmg.DataConnectionConfig.apis[api][this.operationId];
 
-      request.then(
-        this._boundHandleResponse
-      ).catch(
-        this._boundHandleError
-      );
+      try {
+        request(this.params).then(
+          this._boundHandleResponse
+        ).catch(
+          this._boundHandleError
+        );
+      } catch(e) {
+        this._handleError(e.message);
+      }
       this._setLoading(true);
 
       return request;
@@ -183,49 +207,28 @@
     }
 
     /**
-     * Checks if Resource is available in Swagger 2.0 schema
+     * Checks if Api is available in Swagger 2.0 schema
      *
      */
-    _resourceAvailable() {
-      if (!this.resource) {
-        return ({ error: `No resource given` });
+    _apiAvailable() {
+      if (!this.api) {
+        return ({ error: `No api given` });
       }
 
-      const isAvailable = Exmg.DataConnectionConfig.spec.tags.find(tag => tag.name === this.resource);
+      const isAvailable = Exmg.DataConnectionConfig.spec.tags.find(tag => tag.name === this.api);
 
       if (isAvailable) {
         return isAvailable.name;
       }
 
-      return ({ error: `Resource ${this.resource} not found` });
-    }
-
-    /**
-     * Checks if Method is available in Swagger 2.0 schema
-     *
-     */
-    _methodAvailable() {
-      if (!this.method) {
-        return ({ error: `No method given` });
-      }
-
-      const { apis } = Exmg.DataConnectionConfig;
-
-      for (var key in apis[this.resource]) {
-        if (this.method === key ) {
-          return key;
-        }
-      }
-
-      return ({ error: `Method ${this.method} not found` });
+      return ({ error: `Api ${this.api} not found` });
     }
 
     _requestOptionsChanged() {
       this._debouncer = Polymer.Debouncer.debounce(
         this._debouncer,
-        Polymer.Async.timeOut.after(this.debounceDuration),
-        () => {
-          if (!this.method && !this.resource) {
+        Polymer.Async.timeOut.after(this.debounceDuration), () => {
+          if (!this.operationId && !this.api) {
             return null;
           }
           if (this.auto) {

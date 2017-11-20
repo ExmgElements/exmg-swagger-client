@@ -1,33 +1,22 @@
-# \<exmg-swagger2-0\>
+exmg-swagger-client
+================
 
-component to connect through swagger 2.0
+Please visit the [API Documentation and demo](http://ExmgElements.github.io/exmg-swagger-client/) page for more information.
 
 ## Install the Polymer-CLI
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
+First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
 
-## Viewing Your Application
+## Install
+
+Install the component using bower
+
+```
+$ bower install --save ExmgElements/exmg-swagger-client
+```
+
+## Viewing Your Element
 
 ```
 $ polymer serve
 ```
-
-## Building Your Application
-
-```
-$ polymer build
-```
-
-This will create builds of your application in the `build/` directory, optimized to be served in production. You can then serve the built versions by giving `polymer serve` a folder to serve from:
-
-```
-$ polymer serve build/default
-```
-
-## Running Tests
-
-```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.

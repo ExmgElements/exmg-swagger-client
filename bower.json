@@ -1,16 +1,17 @@
 {
-  "name": "exmg-data-connection",
-  "version": "1.0.4",
-  "description": "Component to connect through swagger 2.0",
+  "name": "exmg-swagger-client",
+  "version": "1.0.5",
+  "description": "Element for using Swagger 2.0 generated API",
   "authors": [
     "Ex Machina Group"
   ],
   "keywords": [
     "web-components",
     "polymer",
-    "websocket"
+    "swagger",
+    "swagger-client"
   ],
-  "main": "exmg-data-connection.html",
+  "main": "exmg-swagger-client.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0"
   },

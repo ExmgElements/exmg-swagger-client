@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="exmg-data-connection-import.html">
+<link rel="import" href="exmg-swagger-client-import.html">
 
 <script>
   'use strict';
@@ -9,17 +9,27 @@
     *
     **/
     class DataConnectionConfigElement extends Polymer.Element {
-      static get is() { return 'exmg-data-connection-config'; }
+      static get is() { return 'exmg-swagger-client-config'; }
       static get properties() {
         return {
+          /**
+           * Url pointing to the deagger 2.0 json file
+           */
           swaggerUrl: {
             type: String,
             observer: '_swaggerUrlChanged',
           },
+          /**
+           * By default the server url from json file will be used. This serverUrl property is optional
+           * and can be used as an override.
+           */
           serverUrl: {
             type: String,
             observer: '_serverUrlChanged',
           },
+          /**
+           * Boolean indicating if swagger client api is loaded
+           */
           apiReady: {
             type: Boolean,
             notify: true,

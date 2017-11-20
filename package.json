@@ -1,17 +1,18 @@
 {
-  "name": "exmg-data-connection",
+  "name": "exmg-swagger-client",
   "private": true,
   "version": "1.0.0",
-  "description": "Data Connection via Swagger 2.0.",
-  "main": "exmg-data-connection.html",
-  "repository": "ExmgElements/exmg-data-connection",
+  "description": "Element for using Swagger 2.0 generated API",
+  "main": "exmg-swagger-client.html",
+  "repository": "ExmgElements/exmg-swagger-client",
   "keywords": [
     "Exmg",
     "ExmgElements",
-    "exmg-data-connection",
+    "exmg-swagger-client",
     "web-components",
     "web-component",
-    "polymer"
+    "polymer",
+    "swagger"
   ],
   "author": "Ex Machina",
   "devDependencies": {
@@ -24,6 +25,6 @@
   "scripts": {
     "lint": "polymer lint --rules polymer-2 --input *.html",
     "eslint": "eslint . --ext js,html --ignore-path .gitignore",
-    "analyze": "polymer analyze --input exmg-data-connection-config.html exmg-data-connection.html > analysis.json"
+    "analyze": "polymer analyze --input exmg-swagger-client-config.html exmg-swagger-client.html > analysis.json"
   }
 }

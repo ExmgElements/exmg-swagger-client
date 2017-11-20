@@ -4,28 +4,27 @@
   'use strict';
   {
   /**
-  * Data connection Polymer element that connects using a swagger 2.0 schema and a restfull API server.
+  * Element for using Swagger 2.0 generated API
   *
-  * <exmg-data-connection
-  *   api="globalData"
-  *   operationId="get"
-  *   server-url="https://backend.winview-dev-feature.playtotv.com/api/"
-  *   error="{{error}}"
-  *   data="{{data}}"
-  *   auto="true"
-  * ></exmg-data-connection>
+  * <exmg-swagger-client
+  *   api="pet"
+  *   operation-id="getPet"
+  *   params='{petId:'324421445'}'
+  *   last-response="{{response}}"
+  *   last-error="{{error}}"
+  *   auto></exmg-swagger-client>
   *
   * @customElement
   * @polymer
   * @group Exmg Core Elements
-  * @element exmg-data-connection
+  * @element exmg-swagger-client
   * @demo demo/index.html
   * @memberof Exmg
   * @extends Polymer.Element
   * @summary Custom element to connect to a restfull API layer using a Swagger 2.0 schema
   */
   class DataConnectionElement extends Polymer.Element {
-    static get is() { return 'exmg-data-connection'; }
+    static get is() { return 'exmg-swagger-client'; }
     static get properties() {
       return {
         /**
@@ -106,7 +105,7 @@
         },
 
         /**
-         * By default, exmg-data-connection events do not bubble. Setting this attribute will cause its
+         * By default, exmg-swagger-client events do not bubble. Setting this attribute will cause its
          * events to bubble to the window object.
          */
         bubbles: {

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>exmg-data-connection</title>
+    <title>exmg-swagger-client</title>
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
@@ -15,8 +15,8 @@
     <link rel="import" href="../../iron-input/iron-input.html">
     <link rel="import" href="../../iron-form/iron-form.html">
 
-    <link rel="import" href="../exmg-data-connection-config.html">
-    <link rel="import" href="../exmg-data-connection.html">
+    <link rel="import" href="../exmg-swagger-client-config.html">
+    <link rel="import" href="../exmg-swagger-client.html">
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
@@ -24,7 +24,7 @@
     </custom-style>
   </head>
   <body>
-    <dom-module id="data-connection-demo">
+    <dom-module id="swagger-client-demo">
       <template>
         <custom-style>
           <style>
@@ -67,22 +67,22 @@
 
         <div class="centered">
           <!-- Initialize swagger client api -->
-          <exmg-data-connection-config
+          <exmg-swagger-client-config
             swagger-url="[[swaggerUrl]]"
             server-url="[[serverUrl]]"
-            api-ready="{{apiReady}}"></exmg-data-connection-config>
+            api-ready="{{apiReady}}"></exmg-swagger-client-config>
 
           <!-- Connection element enabled after swagger api is initialized -->
           <template is="dom-if" if="[[apiReady]]" restamp="true">
-            <exmg-data-connection
+            <exmg-swagger-client
               id="connection"
               api="[[api]]"
               operation-id="[[operationId]]"
               last-error="{{lastError}}"
-              last-response="{{lastResponse}}"></exmg-data-connection>
+              last-response="{{lastResponse}}"></exmg-swagger-client>
           </template>
 
-          <h3>exmg-data-connection demo</h3>
+          <h3>exmg-swagger-client demo</h3>
 
           <div>
             <!-- Swagger Url -->
@@ -158,7 +158,7 @@
       <script>
         window.addEventListener('WebComponentsReady', function() {
           class DataConnectionDemo extends Polymer.GestureEventListeners(Polymer.Element) {
-            static get is() { return 'data-connection-demo'; }
+            static get is() { return 'swagger-client-demo'; }
             static get properties() {
               return {
                 history: {
@@ -276,6 +276,6 @@
       </script>
     </dom-module>
 
-    <data-connection-demo></data-connection-demo>
+    <swagger-client-demo></swagger-client-demo>
   </body>
 </html>

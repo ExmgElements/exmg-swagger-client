@@ -1,0 +1,74 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="exmg-swagger-client-import.html">
+
+<script>
+  'use strict';
+  {
+    /**
+    * Data connection Config - Polymer element that inits swaggerClient through config to access globaly
+    *
+    **/
+    class DataConnectionConfigElement extends Polymer.Element {
+      static get is() { return 'exmg-swagger-client-config'; }
+      static get properties() {
+        return {
+          /**
+           * Url pointing to the deagger 2.0 json file
+           */
+          swaggerUrl: {
+            type: String,
+            observer: '_swaggerUrlChanged',
+          },
+          /**
+           * By default the server url from json file will be used. This serverUrl property is optional
+           * and can be used as an override.
+           */
+          serverUrl: {
+            type: String,
+            observer: '_serverUrlChanged',
+          },
+          /**
+           * Boolean indicating if swagger client api is loaded
+           */
+          apiReady: {
+            type: Boolean,
+            notify: true,
+            readOnly: true,
+            value: false,
+          }
+        }
+      }
+      _swaggerUrlChanged(url) {
+        this._reset();
+        this._initSwagger();
+      }
+      _serverUrlChanged(url) {
+        if (Exmg.DataConnectionConfig && this.serverUrl) {
+          Exmg.DataConnectionConfig.url = this.serverUrl;
+        }
+      }
+      _reset(){
+        this._setApiReady(false);
+        Exmg.DataConnectionConfig = null;
+      }
+      _initSwagger() {
+        if (!Exmg.DataConnectionConfig) {
+          new SwaggerClient(this.swaggerUrl, { url: this.serverUrl }).then((swaggerClient) => {
+            Exmg.DataConnectionConfig = swaggerClient;
+            if(this.serverUrl) {
+              Exmg.DataConnectionConfig.url = this.serverUrl;
+            }
+            this._setApiReady(true);
+          });
+        }
+      }
+    }
+    window.customElements.define(DataConnectionConfigElement.is, DataConnectionConfigElement);
+
+    /**
+     * @namespace Exmg
+     */
+    window.Exmg = window.Exmg || {};
+    Exmg.DataConnectionConfigElement = DataConnectionConfigElement;
+  }
+</script>

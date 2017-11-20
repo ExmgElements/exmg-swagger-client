@@ -1,0 +1,30 @@
+{
+  "name": "exmg-swagger-client",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Element for using Swagger 2.0 generated API",
+  "main": "exmg-swagger-client.html",
+  "repository": "ExmgElements/exmg-swagger-client",
+  "keywords": [
+    "Exmg",
+    "ExmgElements",
+    "exmg-swagger-client",
+    "web-components",
+    "web-component",
+    "polymer",
+    "swagger"
+  ],
+  "author": "Ex Machina",
+  "devDependencies": {
+    "bower": "latest",
+    "eslint": "^4.0.0",
+    "eslint-plugin-html": "^3.0.0",
+    "polymer-cli": "^1.2.0"
+  },
+  "homepage": "https://github.com/ExmgElements/",
+  "scripts": {
+    "lint": "polymer lint --rules polymer-2 --input *.html",
+    "eslint": "eslint . --ext js,html --ignore-path .gitignore",
+    "analyze": "polymer analyze --input exmg-swagger-client-config.html exmg-swagger-client.html > analysis.json"
+  }
+}

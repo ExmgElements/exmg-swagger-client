@@ -1,0 +1,13 @@
+.DS_Store
+npm-debug.log
+.idea
+bower_components/
+node_modules/
+dist/
+test-reports/
+intl/
+coverage/
+reports/
+*.report.html
+/version.js
+/private

@@ -1,0 +1,248 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<script>
+  'use strict';
+  {
+  /**
+  * Element for using Swagger 2.0 generated API
+  *
+  * <exmg-swagger-client
+  *   api="pet"
+  *   operation-id="getPet"
+  *   params='{petId:'324421445'}'
+  *   last-response="{{response}}"
+  *   last-error="{{error}}"
+  *   auto></exmg-swagger-client>
+  *
+  * @customElement
+  * @polymer
+  * @group Exmg Core Elements
+  * @element exmg-swagger-client
+  * @demo demo/index.html
+  * @memberof Exmg
+  * @extends Polymer.Element
+  * @summary Custom element to connect to a restfull API layer using a Swagger 2.0 schema
+  */
+  class DataConnectionElement extends Polymer.Element {
+    static get is() { return 'exmg-swagger-client'; }
+    static get properties() {
+      return {
+        /**
+         * Available Api's
+         */
+        api: {
+          type: String,
+        },
+
+        /**
+         * Is a unique key within the spec
+         */
+        operationId: {
+          type: String,
+        },
+
+        /**
+         * An object that contains query parameters to be appended to the
+         * specified `url` when generating a request. If you wish to set the body
+         * content when making a POST request, you should use the `body` property
+         * instead.
+        */
+        params: {
+          type: Object,
+          value: () => ({}),
+        },
+
+        /**
+         * lastRequest's response.
+         *
+         * Note that lastResponse and lastError are set when lastRequest finishes.
+         *
+         * @type {Object}
+         */
+        lastResponse: {
+          type: Object,
+          notify: true,
+          readOnly: true
+        },
+
+        /**
+         * lastRequest's error, if any.
+         *
+         * @type {Object}
+         */
+        lastError: {
+          type: Object,
+          notify: true,
+          readOnly: true
+        },
+
+        /**
+         * If true, automatically performs an Ajax request when either `url` or
+         * `params` changes.
+         */
+        auto: {
+          type: Boolean,
+          notify: true,
+          value: false,
+        },
+
+        /**
+         * Length of time in milliseconds to debounce multiple automatically generated requests.
+         */
+        debounceDuration: {
+          type: Number,
+          readOnly: true,
+          value: 0,
+        },
+
+        /**
+         * The most recent request made.
+         */
+        lastRequest: {
+          type: Object,
+          notify: true,
+          readOnly: true
+        },
+
+        /**
+         * By default, exmg-swagger-client events do not bubble. Setting this attribute will cause its
+         * events to bubble to the window object.
+         */
+        bubbles: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * True while request is in flight.
+         */
+        loading: {
+          type: Boolean,
+          notify: true,
+          readOnly: true
+        },
+
+        _boundHandleResponse: {
+          type: Function,
+        }
+
+        /**
+         * Fired when a response is received.
+         *
+         * @event response
+         */
+
+        /**
+         * Fired when an error is received.
+         *
+         * @event error
+         */
+      };
+    }
+
+    static get observers() {
+      return [
+        '_requestOptionsChanged(api, operationId, auto, debounceDuration)'
+      ]
+    }
+
+    constructor() {
+      super();
+      this._boundHandleResponse = this._handleResponse.bind(this);
+      this._boundHandleError = this._handleError.bind(this);
+    }
+
+    /**
+     * Performs an AJAX request using the swagger api.
+     *
+     */
+    generateRequest() {
+      if(!Exmg.DataConnectionConfig) {
+        throw new Error('Data connection config not loaded!');
+      }
+
+      const api = this._apiAvailable();
+      console.log('generateRequest', api, this.operationId, this.params);
+
+      if (api.error) {
+        this._handleError(api.error);
+        return Promise.reject(new Error(api.error));
+      }
+
+      const { apis } = Exmg.DataConnectionConfig;
+
+      if (typeof apis[api][this.operationId] !== 'function') {
+        this._handleError(`Operation Id ${this.operationId} not found`);
+        return Promise.reject(new Error(this._getLastError()));
+      }
+
+      const request = Exmg.DataConnectionConfig.apis[api][this.operationId];
+
+      try {
+        request(this.params).then(
+          this._boundHandleResponse
+        ).catch(
+          this._boundHandleError
+        );
+      } catch(e) {
+        this._handleError(e.message);
+      }
+      this._setLoading(true);
+
+      return request;
+    }
+
+    _handleError(error) {
+      this._setLastError({error: error});
+      this._setLastResponse(null);
+      this._setLoading(false);
+      this.dispatchEvent(new CustomEvent('error', { bubbles: this.bubbles, composed: true, detail: {error: error} }));
+    }
+
+    _handleResponse(response) {
+      this._setLastResponse(response);
+      this._setLastError(null);
+      this._setLoading(false);
+      this.dispatchEvent(new CustomEvent('response', { bubbles: this.bubbles, composed: true, detail: response }));
+    }
+
+    /**
+     * Checks if Api is available in Swagger 2.0 schema
+     *
+     */
+    _apiAvailable() {
+      if (!this.api) {
+        return ({ error: `No api given` });
+      }
+
+      const isAvailable = Exmg.DataConnectionConfig.spec.tags.find(tag => tag.name === this.api);
+
+      if (isAvailable) {
+        return isAvailable.name;
+      }
+
+      return ({ error: `Api ${this.api} not found` });
+    }
+
+    _requestOptionsChanged() {
+      this._debouncer = Polymer.Debouncer.debounce(
+        this._debouncer,
+        Polymer.Async.timeOut.after(this.debounceDuration), () => {
+          if (!this.operationId && !this.api) {
+            return null;
+          }
+          if (this.auto) {
+            this.generateRequest();
+          }
+        });
+    }
+  }
+
+  window.customElements.define(DataConnectionElement.is, DataConnectionElement);
+
+  /**
+   * @namespace Exmg
+   */
+  window.Exmg = window.Exmg || {};
+  Exmg.DataConnectionElement = DataConnectionElement;
+}
+</script>

@@ -158,7 +158,9 @@
       <script>
         window.addEventListener('WebComponentsReady', function() {
           class DataConnectionDemo extends Polymer.GestureEventListeners(Polymer.Element) {
-            static get is() { return 'swagger-client-demo'; }
+            static get is() {
+              return 'swagger-client-demo';
+            }
             static get properties() {
               return {
                 history: {
@@ -216,9 +218,9 @@
               return [];
             }
             _submit() {
-              let form = this.shadowRoot.querySelector('#form');
+              const form = this.shadowRoot.querySelector('#form');
               console.log('submit', form, form.serializeForm());
-              let connection = this.shadowRoot.querySelector('#connection');
+              const connection = this.shadowRoot.querySelector('#connection');
               connection.resource = this.selectedMethod.tags[0];
               connection.method = this.selectedMethod.operationId;
               connection.params = form.serializeForm();
@@ -228,32 +230,32 @@
               this.set('selectedMethodType', null);
             }
             _methodTypeChanged(type) {
-              if(type) {
+              if (type) {
                 this.set('api', this.selectedMethod.tags[0]);
                 this.set('operationId', this.selectedMethod.operationId);
               }
             }
             _selectedMethodChanged(method) {
-              let m = this.selectedPath.find((p) => p.method === method);
+              const m = this.selectedPath.find((p) => p.method === method);
               return m ? m.obj : null;
             }
             _selectedPathChanged(path) {
-              let obj = this.pathOptions.find(po => po.path === path).obj;
+              const obj = this.pathOptions.find(po => po.path === path).obj;
               return Object.keys(obj).map((k) => ({method: k, obj: obj[k]}));
             }
             _addLog(d) {
-              let date = new Intl.DateTimeFormat('en-US', {
+              const date = new Intl.DateTimeFormat('en-US', {
                 hour: 'numeric', minute: 'numeric', second: 'numeric',
               }).format();
               this.push('history', {date: date, data: d});
             }
             _handleError(e) {
-              if(e) {
+              if (e) {
                 this._addLog(JSON.stringify(e, null, '\t'));
               }
             }
             _handleNewData(d) {
-              if(d) {
+              if (d) {
                 this._addLog(`Request URL: ${d.url}`);
                 this._addLog(`Status Code: ${d.status}`);
                 this._addLog(`Status Text: ${d.statusText}`);
@@ -262,10 +264,13 @@
               }
             }
             _apiReady() {
-              if(Exmg.DataConnectionConfig) {
+              if (Exmg.DataConnectionConfig) {
                 this._addLog('Swagger Client Initialised');
                 console.log('Exmg.DataConnectionConfig', Exmg.DataConnectionConfig);
-                this.set('pathOptions', Object.keys(Exmg.DataConnectionConfig.spec.paths).map((k) => ({path: k,obj: Exmg.DataConnectionConfig.spec.paths[k]})));
+                this.set('pathOptions', Object.keys(Exmg.DataConnectionConfig.spec.paths)
+                  .map((k) => ({
+                    path: k, obj: Exmg.DataConnectionConfig.spec.paths[k]
+                  })));
               }
             }
           }

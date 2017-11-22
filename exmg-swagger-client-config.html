@@ -9,7 +9,9 @@
     *
     **/
     class DataConnectionConfigElement extends Polymer.Element {
-      static get is() { return 'exmg-swagger-client-config'; }
+      static get is() {
+        return 'exmg-swagger-client-config';
+      }
       static get properties() {
         return {
           /**
@@ -36,7 +38,7 @@
             readOnly: true,
             value: false,
           }
-        }
+        };
       }
       _swaggerUrlChanged(url) {
         this._reset();
@@ -47,15 +49,17 @@
           Exmg.DataConnectionConfig.url = this.serverUrl;
         }
       }
-      _reset(){
+      _reset() {
         this._setApiReady(false);
         Exmg.DataConnectionConfig = null;
       }
       _initSwagger() {
         if (!Exmg.DataConnectionConfig) {
-          new SwaggerClient(this.swaggerUrl, { url: this.serverUrl }).then((swaggerClient) => {
+          new SwaggerClient(this.swaggerUrl, {
+            url: this.serverUrl
+          }).then((swaggerClient) => {
             Exmg.DataConnectionConfig = swaggerClient;
-            if(this.serverUrl) {
+            if (this.serverUrl) {
               Exmg.DataConnectionConfig.url = this.serverUrl;
             }
             this._setApiReady(true);

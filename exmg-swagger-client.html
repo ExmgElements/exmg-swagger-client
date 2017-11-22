@@ -1,8 +1,8 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
 <script>
-  'use strict';
-  {
+'use strict';
+{
   /**
   * Element for using Swagger 2.0 generated API
   *
@@ -24,7 +24,9 @@
   * @summary Custom element to connect to a restfull API layer using a Swagger 2.0 schema
   */
   class DataConnectionElement extends Polymer.Element {
-    static get is() { return 'exmg-swagger-client'; }
+    static get is() {
+      return 'exmg-swagger-client';
+    }
     static get properties() {
       return {
         /**
@@ -142,7 +144,7 @@
     static get observers() {
       return [
         '_requestOptionsChanged(api, operationId, auto, debounceDuration)'
-      ]
+      ];
     }
 
     constructor() {
@@ -156,7 +158,7 @@
      *
      */
     generateRequest() {
-      if(!Exmg.DataConnectionConfig) {
+      if (!Exmg.DataConnectionConfig) {
         throw new Error('Data connection config not loaded!');
       }
 
@@ -168,7 +170,7 @@
         return Promise.reject(new Error(api.error));
       }
 
-      const { apis } = Exmg.DataConnectionConfig;
+      const {apis} = Exmg.DataConnectionConfig;
 
       if (typeof apis[api][this.operationId] !== 'function') {
         this._handleError(`Operation Id ${this.operationId} not found`);
@@ -183,7 +185,7 @@
         ).catch(
           this._boundHandleError
         );
-      } catch(e) {
+      } catch (e) {
         this._handleError(e.message);
       }
       this._setLoading(true);
@@ -195,14 +197,14 @@
       this._setLastError({error: error});
       this._setLastResponse(null);
       this._setLoading(false);
-      this.dispatchEvent(new CustomEvent('error', { bubbles: this.bubbles, composed: true, detail: {error: error} }));
+      this.dispatchEvent(new CustomEvent('error', {bubbles: this.bubbles, composed: true, detail: {error: error}}));
     }
 
     _handleResponse(response) {
       this._setLastResponse(response);
       this._setLastError(null);
       this._setLoading(false);
-      this.dispatchEvent(new CustomEvent('response', { bubbles: this.bubbles, composed: true, detail: response }));
+      this.dispatchEvent(new CustomEvent('response', {bubbles: this.bubbles, composed: true, detail: response}));
     }
 
     /**
@@ -211,7 +213,7 @@
      */
     _apiAvailable() {
       if (!this.api) {
-        return ({ error: `No api given` });
+        return ({error: `No api given`});
       }
 
       const isAvailable = Exmg.DataConnectionConfig.spec.tags.find(tag => tag.name === this.api);
@@ -220,7 +222,7 @@
         return isAvailable.name;
       }
 
-      return ({ error: `Api ${this.api} not found` });
+      return ({error: `Api ${this.api} not found`});
     }
 
     _requestOptionsChanged() {

@@ -178,19 +178,13 @@
       }
 
       const request = Exmg.DataConnectionConfig.apis[api][this.operationId];
-
-      try {
-        request(this.params).then(
-          this._boundHandleResponse
-        ).catch(
-          this._boundHandleError
-        );
-      } catch (e) {
-        this._handleError(e.message);
-      }
       this._setLoading(true);
 
-      return request;
+      return request(this.params).then(
+        this._boundHandleResponse
+      ).catch(
+        this._boundHandleError
+      );
     }
 
     _handleError(error) {
@@ -198,6 +192,7 @@
       this._setLastResponse(null);
       this._setLoading(false);
       this.dispatchEvent(new CustomEvent('error', {bubbles: this.bubbles, composed: true, detail: {error: error}}));
+      throw error;
     }
 
     _handleResponse(response) {

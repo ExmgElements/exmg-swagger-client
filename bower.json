@@ -5,12 +5,18 @@
   "authors": [
     "Ex Machina Group"
   ],
+  "homepage": "http://exmg.github.io/ExmgElements/exmg-swagger-client/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ExmgElements/exmg-swagger-client.git"
+  },
   "keywords": [
     "web-components",
     "polymer",
     "swagger",
     "swagger-client"
   ],
+  "license": "MIT License",
   "main": "exmg-swagger-client.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0"

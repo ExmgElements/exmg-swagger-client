@@ -58,6 +58,7 @@
           new SwaggerClient(this.swaggerUrl, {
             url: this.serverUrl
           }).then((swaggerClient) => {
+            swaggerClient.http.withCredentials = true;
             Exmg.DataConnectionConfig = swaggerClient;
             if (this.serverUrl) {
               Exmg.DataConnectionConfig.url = this.serverUrl;

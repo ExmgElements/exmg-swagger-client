@@ -21,6 +21,7 @@
             type: String,
             observer: '_swaggerUrlChanged',
           },
+
           /**
            * By default the server url from json file will be used. This serverUrl property is optional
            * and can be used as an override.
@@ -37,12 +38,22 @@
             notify: true,
             readOnly: true,
             value: false,
+          },
+
+          responseInterceptor: Function,
+          requestInterceptor: Function,
+
+          auto: {
+            type: Boolean,
+            value: false,
           }
         };
       }
       _swaggerUrlChanged(url) {
-        this._reset();
-        this._initSwagger();
+        if(this.auto) {
+          this._reset();
+          this.initSwagger();
+        }
       }
       _serverUrlChanged(url) {
         if (Exmg.DataConnectionConfig && this.serverUrl) {
@@ -53,10 +64,12 @@
         this._setApiReady(false);
         Exmg.DataConnectionConfig = null;
       }
-      _initSwagger() {
+      initSwagger() {
         if (!Exmg.DataConnectionConfig) {
-          new SwaggerClient(this.swaggerUrl, {
-            url: this.serverUrl
+          this.swaggerClient = new SwaggerClient(this.swaggerUrl, {
+            url: this.serverUrl,
+            responseInterceptor: this.responseInterceptor,
+            requestInterceptor: this.requestInterceptor
           }).then((swaggerClient) => {
             swaggerClient.http.withCredentials = true;
             Exmg.DataConnectionConfig = swaggerClient;

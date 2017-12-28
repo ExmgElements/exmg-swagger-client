@@ -68,6 +68,7 @@
         <div class="centered">
           <!-- Initialize swagger client api -->
           <exmg-swagger-client-config
+            id="clientConfig"
             swagger-url="[[swaggerUrl]]"
             server-url="[[serverUrl]]"
             api-ready="{{apiReady}}"></exmg-swagger-client-config>
@@ -177,11 +178,11 @@
                 },
                 swaggerUrl: {
                   type: String,
-                  value: 'https://petstore.swagger.io/v2/swagger.json',
+                  value: 'http://petstore.swagger.io/v2/swagger.json',
                 },
                 serverUrl: {
                   type: String,
-                  value: 'https://swagger.io',
+                  value: 'http://swagger.io',
                 },
                 apiReady: {
                   type: Boolean,
@@ -216,6 +217,19 @@
             }
             static get observers() {
               return [];
+            }
+            connectedCallback() {
+              super.connectedCallback();
+              this.$.clientConfig.responseInterceptor = (res) => {
+                console.log('responseInterceptor', res);
+              };
+              this.$.clientConfig.requestInterceptor = (req) => {
+                console.log('requestInterceptor', req);
+              };
+              this.$.clientConfig.initSwagger();
+            }
+            _responseInterceptor(res) {
+              console.log('_responseInterceptor1', res);
             }
             _submit() {
               const form = this.shadowRoot.querySelector('#form');

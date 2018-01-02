@@ -26,6 +26,6 @@
   "scripts": {
     "lint": "polymer lint --rules polymer-2 --input *.html",
     "eslint": "eslint . --ext js,html --ignore-path .gitignore",
-    "analyze": "polymer analyze --input exmg-swagger-client-config.html exmg-swagger-client.html > analysis.json"
+    "analyze": "polymer analyze --input exmg-swagger-client-config.html exmg-swagger-client.html exmg-swagger-common.html > analysis.json"
   }
 }

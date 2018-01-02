@@ -15,6 +15,7 @@
     <link rel="import" href="../../iron-input/iron-input.html">
     <link rel="import" href="../../iron-form/iron-form.html">
 
+    <link rel="import" href="../exmg-swagger-client-common.html">
     <link rel="import" href="../exmg-swagger-client-config.html">
     <link rel="import" href="../exmg-swagger-client.html">
 
@@ -70,18 +71,15 @@
           <exmg-swagger-client-config
             id="clientConfig"
             swagger-url="[[swaggerUrl]]"
-            server-url="[[serverUrl]]"
-            api-ready="{{apiReady}}"></exmg-swagger-client-config>
+            server-url="[[serverUrl]]"></exmg-swagger-client-config>
 
           <!-- Connection element enabled after swagger api is initialized -->
-          <template is="dom-if" if="[[apiReady]]" restamp="true">
-            <exmg-swagger-client
-              id="connection"
-              api="[[api]]"
-              operation-id="[[operationId]]"
-              last-error="{{lastError}}"
-              last-response="{{lastResponse}}"></exmg-swagger-client>
-          </template>
+          <exmg-swagger-client
+            id="connection"
+            api="[[api]]"
+            operation-id="[[operationId]]"
+            last-error="{{lastError}}"
+            last-response="{{lastResponse}}"></exmg-swagger-client>
 
           <h3>exmg-swagger-client demo</h3>
 
@@ -157,8 +155,8 @@
         </div>
       </template>
       <script>
-        window.addEventListener('WebComponentsReady', function() {
-          class DataConnectionDemo extends Polymer.GestureEventListeners(Polymer.Element) {
+        window.addEventListener('WebComponentsReady', () => {
+          class DataConnectionDemo extends Exmg.SwaggerCommonMixin(Polymer.GestureEventListeners(Polymer.Element)) {
             static get is() {
               return 'swagger-client-demo';
             }
@@ -178,15 +176,11 @@
                 },
                 swaggerUrl: {
                   type: String,
-                  value: 'http://petstore.swagger.io/v2/swagger.json',
+                  value: '',
                 },
                 serverUrl: {
                   type: String,
-                  value: 'http://swagger.io',
-                },
-                apiReady: {
-                  type: Boolean,
-                  observer: '_apiReady',
+                  value: '',
                 },
                 api: {
                   type: String,
@@ -216,7 +210,9 @@
               };
             }
             static get observers() {
-              return [];
+              return [
+                '_apiReady(swaggerClientApi)',
+              ];
             }
             connectedCallback() {
               super.connectedCallback();
@@ -277,15 +273,15 @@
                 this._addLog(`Response Body: ` + JSON.stringify(d.body, null, '\t'));
               }
             }
-            _apiReady() {
-              if (Exmg.DataConnectionConfig) {
-                this._addLog('Swagger Client Initialised');
-                console.log('Exmg.DataConnectionConfig', Exmg.DataConnectionConfig);
-                this.set('pathOptions', Object.keys(Exmg.DataConnectionConfig.spec.paths)
-                  .map((k) => ({
-                    path: k, obj: Exmg.DataConnectionConfig.spec.paths[k]
-                  })));
+            _apiReady(api) {
+              if (!api) {
+                return;
               }
+              this._addLog('Swagger Client Initialised');
+              this.set('pathOptions', Object.keys(api.spec.paths)
+                .map((k) => ({
+                  path: k, obj: api.spec.paths[k]
+                })));
             }
           }
           window.customElements.define(DataConnectionDemo.is, DataConnectionDemo);

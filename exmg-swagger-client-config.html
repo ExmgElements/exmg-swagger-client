@@ -15,6 +15,17 @@
       static get properties() {
         return {
           /**
+           * The name of your config.
+           *
+           * You can use this with the `configName` property of other client element
+           * in order to use multiple configurations on a page at once.
+           * In that case the name is used as a key to lookup the configuration.
+           */
+          name: {
+            type: String,
+            value: ''
+          },
+          /**
            * Url pointing to the deagger 2.0 json file
            */
           swaggerUrl: {
@@ -30,15 +41,6 @@
             type: String,
             observer: '_serverUrlChanged',
           },
-          /**
-           * Boolean indicating if swagger client api is loaded
-           */
-          apiReady: {
-            type: Boolean,
-            notify: true,
-            readOnly: true,
-            value: false,
-          },
 
           responseInterceptor: Function,
           requestInterceptor: Function,
@@ -50,35 +52,41 @@
         };
       }
       _swaggerUrlChanged(url) {
-        if(this.auto) {
+        if (this.auto) {
           this._reset();
           this.initSwagger();
         }
       }
       _serverUrlChanged(url) {
-        if (Exmg.DataConnectionConfig && this.serverUrl) {
-          Exmg.DataConnectionConfig.url = this.serverUrl;
+        if (Exmg.swaggerClient && this.serverUrl) {
+          Exmg.swaggerClient.url = this.serverUrl;
         }
       }
       _reset() {
-        this._setApiReady(false);
-        Exmg.DataConnectionConfig = null;
+        Exmg.swaggerClient = null;
       }
       initSwagger() {
-        if (!Exmg.DataConnectionConfig) {
-          this.swaggerClient = new SwaggerClient(this.swaggerUrl, {
-            url: this.serverUrl,
-            responseInterceptor: this.responseInterceptor,
-            requestInterceptor: this.requestInterceptor
-          }).then((swaggerClient) => {
-            swaggerClient.http.withCredentials = true;
-            Exmg.DataConnectionConfig = swaggerClient;
-            if (this.serverUrl) {
-              Exmg.DataConnectionConfig.url = this.serverUrl;
-            }
-            this._setApiReady(true);
-          });
-        }
+        /* Load swagger api */
+        this.swaggerClient = new SwaggerClient(this.swaggerUrl, {
+          url: this.serverUrl,
+          responseInterceptor: this.responseInterceptor,
+          requestInterceptor: this.requestInterceptor
+        }).then((swaggerClient) => {
+          /* enable cors */
+          swaggerClient.http.withCredentials = true;
+          swaggerClient.name = this.name;
+
+          /* if server url is different then the one specified in api */
+          if (this.serverUrl && this.serverUrl !== swaggerClient.url) {
+            swaggerClient.url = this.serverUrl;
+          }
+
+          /* Add swagger api to Exmg scope */
+          window.Exmg.swaggerClient.addApi(this.name, swaggerClient);
+
+          this.dispatchEvent(new CustomEvent('swagger-api-initialized', {bubbles: true, composed: true, detail: {name: this.name}}));
+        });
+
       }
     }
     window.customElements.define(DataConnectionConfigElement.is, DataConnectionConfigElement);
@@ -88,5 +96,25 @@
      */
     window.Exmg = window.Exmg || {};
     Exmg.DataConnectionConfigElement = DataConnectionConfigElement;
+
+    if (!window.Exmg.swaggerClient) {
+      class ExmgSwaggerClient {
+        constructor() {
+          this.apis = {};
+        }
+        addApi(name, api) {
+          this.apis[name] = api;
+        }
+        api(name) {
+          const api = this.apis[name];
+          if (!api) {
+            throw new Error(`Api ${api} not found`);
+          }
+          return api;
+        }
+      }
+      window.Exmg.swaggerClient = new ExmgSwaggerClient();
+    }
+
   }
 </script>

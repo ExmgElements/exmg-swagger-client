@@ -8,17 +8,17 @@
       "sourceRange": {
         "file": "exmg-swagger-client.html",
         "start": {
-          "line": 244,
+          "line": 247,
           "column": 2
         },
         "end": {
-          "line": 244,
+          "line": 247,
           "column": 34
         }
       },
       "elements": [
         {
-          "description": "Element for using Swagger 2.0 generated API\n\n<exmg-swagger-client\n  api=\"pet\"\n  operation-id=\"getPet\"\n  params='[petId:'324421445']'\n  last-response=\"{{response}}\"\n  last-error=\"{{error}}\"\n  auto></exmg-swagger-client>",
+          "description": "Element for using Swagger 2.0 generated API\n\n<exmg-swagger-client\n  api=\"pet\"\n  operation-id=\"getPet\"\n  params='{petId:'324421445'}'\n  last-response=\"{{response}}\"\n  last-error=\"{{error}}\"\n  auto></exmg-swagger-client>",
           "summary": "Custom element to connect to a restfull API layer using a Swagger 2.0 schema",
           "path": "exmg-swagger-client.html",
           "properties": [
@@ -788,11 +788,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 32,
+                  "line": 36,
                   "column": 8
                 },
                 "end": {
-                  "line": 34,
+                  "line": 38,
                   "column": 9
                 }
               },
@@ -807,11 +807,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 39,
+                  "line": 43,
                   "column": 8
                 },
                 "end": {
-                  "line": 41,
+                  "line": 45,
                   "column": 9
                 }
               },
@@ -826,11 +826,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 49,
+                  "line": 53,
                   "column": 8
                 },
                 "end": {
-                  "line": 52,
+                  "line": 56,
                   "column": 9
                 }
               },
@@ -846,11 +846,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 61,
+                  "line": 65,
                   "column": 8
                 },
                 "end": {
-                  "line": 65,
+                  "line": 69,
                   "column": 9
                 }
               },
@@ -868,11 +868,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 72,
+                  "line": 76,
                   "column": 8
                 },
                 "end": {
-                  "line": 76,
+                  "line": 80,
                   "column": 9
                 }
               },
@@ -890,11 +890,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 82,
+                  "line": 86,
                   "column": 8
                 },
                 "end": {
-                  "line": 86,
+                  "line": 90,
                   "column": 9
                 }
               },
@@ -912,11 +912,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 91,
+                  "line": 95,
                   "column": 8
                 },
                 "end": {
-                  "line": 95,
+                  "line": 99,
                   "column": 9
                 }
               },
@@ -934,11 +934,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 100,
+                  "line": 104,
                   "column": 8
                 },
                 "end": {
-                  "line": 104,
+                  "line": 108,
                   "column": 9
                 }
               },
@@ -956,11 +956,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 110,
+                  "line": 114,
                   "column": 8
                 },
                 "end": {
-                  "line": 113,
+                  "line": 117,
                   "column": 9
                 }
               },
@@ -976,11 +976,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 117,
+                  "line": 121,
                   "column": 8
                 },
                 "end": {
-                  "line": 121,
+                  "line": 125,
                   "column": 9
                 }
               },
@@ -998,11 +998,11 @@
               "privacy": "protected",
               "sourceRange": {
                 "start": {
-                  "line": 123,
+                  "line": 127,
                   "column": 8
                 },
                 "end": {
-                  "line": 125,
+                  "line": 129,
                   "column": 9
                 }
               },
@@ -2925,11 +2925,11 @@
               "privacy": "public",
               "sourceRange": {
                 "start": {
-                  "line": 157,
+                  "line": 161,
                   "column": 4
                 },
                 "end": {
-                  "line": 191,
+                  "line": 189,
                   "column": 5
                 }
               },
@@ -2942,11 +2942,11 @@
               "privacy": "protected",
               "sourceRange": {
                 "start": {
-                  "line": 193,
+                  "line": 191,
                   "column": 4
                 },
                 "end": {
-                  "line": 198,
+                  "line": 197,
                   "column": 5
                 }
               },
@@ -2963,7 +2963,7 @@
               "privacy": "protected",
               "sourceRange": {
                 "start": {
-                  "line": 200,
+                  "line": 199,
                   "column": 4
                 },
                 "end": {
@@ -3005,7 +3005,7 @@
                   "column": 4
                 },
                 "end": {
-                  "line": 236,
+                  "line": 239,
                   "column": 5
                 }
               },
@@ -3791,11 +3791,11 @@
           "metadata": {},
           "sourceRange": {
             "start": {
-              "line": 25,
+              "line": 27,
               "column": 2
             },
             "end": {
-              "line": 237,
+              "line": 240,
               "column": 3
             }
           },
@@ -3808,11 +3808,11 @@
               "description": "Available Api's",
               "sourceRange": {
                 "start": {
-                  "line": 32,
+                  "line": 36,
                   "column": 8
                 },
                 "end": {
-                  "line": 34,
+                  "line": 38,
                   "column": 9
                 }
               },
@@ -3824,11 +3824,11 @@
               "description": "Is a unique key within the spec",
               "sourceRange": {
                 "start": {
-                  "line": 39,
+                  "line": 43,
                   "column": 8
                 },
                 "end": {
-                  "line": 41,
+                  "line": 45,
                   "column": 9
                 }
               },
@@ -3840,11 +3840,11 @@
               "description": "An object that contains query parameters to be appended to the\nspecified `url` when generating a request. If you wish to set the body\ncontent when making a POST request, you should use the `body` property\ninstead.",
               "sourceRange": {
                 "start": {
-                  "line": 49,
+                  "line": 53,
                   "column": 8
                 },
                 "end": {
-                  "line": 52,
+                  "line": 56,
                   "column": 9
                 }
               },
@@ -3856,11 +3856,11 @@
               "description": "lastRequest's response.\n\nNote that lastResponse and lastError are set when lastRequest finishes.",
               "sourceRange": {
                 "start": {
-                  "line": 61,
+                  "line": 65,
                   "column": 8
                 },
                 "end": {
-                  "line": 65,
+                  "line": 69,
                   "column": 9
                 }
               },
@@ -3872,11 +3872,11 @@
               "description": "lastRequest's error, if any.",
               "sourceRange": {
                 "start": {
-                  "line": 72,
+                  "line": 76,
                   "column": 8
                 },
                 "end": {
-                  "line": 76,
+                  "line": 80,
                   "column": 9
                 }
               },
@@ -3888,11 +3888,11 @@
               "description": "If true, automatically performs an Ajax request when either `url` or\n`params` changes.",
               "sourceRange": {
                 "start": {
-                  "line": 82,
+                  "line": 86,
                   "column": 8
                 },
                 "end": {
-                  "line": 86,
+                  "line": 90,
                   "column": 9
                 }
               },
@@ -3904,11 +3904,11 @@
               "description": "Length of time in milliseconds to debounce multiple automatically generated requests.",
               "sourceRange": {
                 "start": {
-                  "line": 91,
+                  "line": 95,
                   "column": 8
                 },
                 "end": {
-                  "line": 95,
+                  "line": 99,
                   "column": 9
                 }
               },
@@ -3920,11 +3920,11 @@
               "description": "The most recent request made.",
               "sourceRange": {
                 "start": {
-                  "line": 100,
+                  "line": 104,
                   "column": 8
                 },
                 "end": {
-                  "line": 104,
+                  "line": 108,
                   "column": 9
                 }
               },
@@ -3936,11 +3936,11 @@
               "description": "By default, exmg-swagger-client events do not bubble. Setting this attribute will cause its\nevents to bubble to the window object.",
               "sourceRange": {
                 "start": {
-                  "line": 110,
+                  "line": 114,
                   "column": 8
                 },
                 "end": {
-                  "line": 113,
+                  "line": 117,
                   "column": 9
                 }
               },
@@ -3952,11 +3952,11 @@
               "description": "True while request is in flight.",
               "sourceRange": {
                 "start": {
-                  "line": 117,
+                  "line": 121,
                   "column": 8
                 },
                 "end": {
-                  "line": 121,
+                  "line": 125,
                   "column": 9
                 }
               },
@@ -4014,6 +4014,164 @@
           },
           "slots": [],
           "tagname": "exmg-swagger-client"
+        }
+      ],
+      "mixins": [
+        {
+          "description": "",
+          "summary": "",
+          "path": "exmg-swagger-common.html",
+          "properties": [
+            {
+              "name": "swaggerClientApi",
+              "type": "Object",
+              "description": "Will contain the swagger API after initialisation",
+              "privacy": "public",
+              "sourceRange": {
+                "start": {
+                  "line": 33,
+                  "column": 10
+                },
+                "end": {
+                  "line": 37,
+                  "column": 11
+                }
+              },
+              "metadata": {
+                "polymer": {
+                  "notify": true,
+                  "observer": "\"_swaggerClientApiChanged\""
+                }
+              }
+            },
+            {
+              "name": "apiName",
+              "type": "string",
+              "description": "This property can be used if you would like to use multiple swagger\napi's. By default the api has no name.",
+              "privacy": "public",
+              "sourceRange": {
+                "start": {
+                  "line": 42,
+                  "column": 10
+                },
+                "end": {
+                  "line": 47,
+                  "column": 11
+                }
+              },
+              "metadata": {
+                "polymer": {
+                  "notify": true,
+                  "observer": "\"_apiNameChanged\""
+                }
+              },
+              "defaultValue": "\"\""
+            }
+          ],
+          "methods": [
+            {
+              "name": "_apiNameChanged",
+              "description": "",
+              "privacy": "protected",
+              "sourceRange": {
+                "start": {
+                  "line": 51,
+                  "column": 6
+                },
+                "end": {
+                  "line": 65,
+                  "column": 7
+                }
+              },
+              "metadata": {},
+              "params": [
+                {
+                  "name": "apiName"
+                }
+              ]
+            },
+            {
+              "name": "_swaggerClientApiChanged",
+              "description": "",
+              "privacy": "protected",
+              "sourceRange": {
+                "start": {
+                  "line": 67,
+                  "column": 6
+                },
+                "end": {
+                  "line": 72,
+                  "column": 7
+                }
+              },
+              "metadata": {},
+              "params": [
+                {
+                  "name": "api"
+                }
+              ]
+            }
+          ],
+          "staticMethods": [],
+          "demos": [
+            {
+              "url": "demo/index.html",
+              "description": ""
+            }
+          ],
+          "metadata": {},
+          "sourceRange": {
+            "start": {
+              "line": 16,
+              "column": 2
+            },
+            "end": {
+              "line": 74,
+              "column": 4
+            }
+          },
+          "privacy": "public",
+          "name": "Exmg.SwaggerCommonMixin",
+          "attributes": [
+            {
+              "name": "swagger-client-api",
+              "description": "Will contain the swagger API after initialisation",
+              "sourceRange": {
+                "start": {
+                  "line": 33,
+                  "column": 10
+                },
+                "end": {
+                  "line": 37,
+                  "column": 11
+                }
+              },
+              "metadata": {},
+              "type": "Object"
+            },
+            {
+              "name": "api-name",
+              "description": "This property can be used if you would like to use multiple swagger\napi's. By default the api has no name.",
+              "sourceRange": {
+                "start": {
+                  "line": 42,
+                  "column": 10
+                },
+                "end": {
+                  "line": 47,
+                  "column": 11
+                }
+              },
+              "metadata": {},
+              "type": "string"
+            }
+          ],
+          "events": [],
+          "styling": {
+            "cssVariables": [],
+            "selectors": []
+          },
+          "slots": []
         }
       ]
     }
@@ -4784,17 +4942,37 @@
           "inheritedFrom": "Polymer.ElementMixin"
         },
         {
+          "name": "name",
+          "type": "string",
+          "description": "The name of your config.\n\nYou can use this with the `configName` property of other client element\nin order to use multiple configurations on a page at once.\nIn that case the name is used as a key to lookup the configuration.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 23,
+              "column": 10
+            },
+            "end": {
+              "line": 26,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
           "name": "swaggerUrl",
           "type": "string",
           "description": "Url pointing to the deagger 2.0 json file",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 17,
+              "line": 30,
               "column": 10
             },
             "end": {
-              "line": 20,
+              "line": 33,
               "column": 11
             }
           },
@@ -4811,11 +4989,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 25,
+              "line": 39,
               "column": 10
             },
             "end": {
-              "line": 28,
+              "line": 42,
               "column": 11
             }
           },
@@ -4826,25 +5004,60 @@
           }
         },
         {
-          "name": "apiReady",
-          "type": "boolean",
-          "description": "Boolean indicating if swagger client api is loaded",
+          "name": "responseInterceptor",
+          "type": "Function",
+          "description": "",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 32,
+              "line": 44,
               "column": 10
             },
             "end": {
-              "line": 37,
+              "line": 44,
+              "column": 39
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "requestInterceptor",
+          "type": "Function",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 45,
+              "column": 10
+            },
+            "end": {
+              "line": 45,
+              "column": 38
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "auto",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 47,
+              "column": 10
+            },
+            "end": {
+              "line": 50,
               "column": 11
             }
           },
           "metadata": {
-            "polymer": {
-              "notify": true,
-              "readOnly": true
-            }
+            "polymer": {}
           },
           "defaultValue": "false"
         }
@@ -6763,11 +6976,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 40,
+              "line": 53,
               "column": 6
             },
             "end": {
-              "line": 43,
+              "line": 58,
               "column": 7
             }
           },
@@ -6784,11 +6997,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 44,
+              "line": 59,
               "column": 6
             },
             "end": {
-              "line": 48,
+              "line": 63,
               "column": 7
             }
           },
@@ -6805,11 +7018,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 49,
+              "line": 64,
               "column": 6
             },
             "end": {
-              "line": 52,
+              "line": 66,
               "column": 7
             }
           },
@@ -6817,16 +7030,16 @@
           "params": []
         },
         {
-          "name": "_initSwagger",
+          "name": "initSwagger",
           "description": "",
-          "privacy": "protected",
+          "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 53,
+              "line": 67,
               "column": 6
             },
             "end": {
-              "line": 63,
+              "line": 89,
               "column": 7
             }
           },
@@ -7611,7 +7824,7 @@
           "column": 4
         },
         "end": {
-          "line": 64,
+          "line": 90,
           "column": 5
         }
       },
@@ -7620,15 +7833,31 @@
       "name": "DataConnectionConfigElement",
       "attributes": [
         {
+          "name": "name",
+          "description": "The name of your config.\n\nYou can use this with the `configName` property of other client element\nin order to use multiple configurations on a page at once.\nIn that case the name is used as a key to lookup the configuration.",
+          "sourceRange": {
+            "start": {
+              "line": 23,
+              "column": 10
+            },
+            "end": {
+              "line": 26,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
           "name": "swagger-url",
           "description": "Url pointing to the deagger 2.0 json file",
           "sourceRange": {
             "start": {
-              "line": 17,
+              "line": 30,
               "column": 10
             },
             "end": {
-              "line": 20,
+              "line": 33,
               "column": 11
             }
           },
@@ -7640,11 +7869,11 @@
           "description": "By default the server url from json file will be used. This serverUrl property is optional\nand can be used as an override.",
           "sourceRange": {
             "start": {
-              "line": 25,
+              "line": 39,
               "column": 10
             },
             "end": {
-              "line": 28,
+              "line": 42,
               "column": 11
             }
           },
@@ -7652,15 +7881,47 @@
           "type": "string"
         },
         {
-          "name": "api-ready",
-          "description": "Boolean indicating if swagger client api is loaded",
+          "name": "response-interceptor",
+          "description": "",
           "sourceRange": {
             "start": {
-              "line": 32,
+              "line": 44,
               "column": 10
             },
             "end": {
-              "line": 37,
+              "line": 44,
+              "column": 39
+            }
+          },
+          "metadata": {},
+          "type": "Function"
+        },
+        {
+          "name": "request-interceptor",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 45,
+              "column": 10
+            },
+            "end": {
+              "line": 45,
+              "column": 38
+            }
+          },
+          "metadata": {},
+          "type": "Function"
+        },
+        {
+          "name": "auto",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 47,
+              "column": 10
+            },
+            "end": {
+              "line": 50,
               "column": 11
             }
           },
@@ -7668,20 +7929,83 @@
           "type": "boolean"
         }
       ],
-      "events": [
-        {
-          "type": "CustomEvent",
-          "name": "api-ready-changed",
-          "description": "Fired when the `apiReady` property changes.",
-          "metadata": {}
-        }
-      ],
+      "events": [],
       "styling": {
         "cssVariables": [],
         "selectors": []
       },
       "slots": [],
       "tagname": "exmg-swagger-client-config"
+    }
+  ],
+  "classes": [
+    {
+      "description": "",
+      "summary": "",
+      "path": "exmg-swagger-client-config.html",
+      "properties": [],
+      "methods": [
+        {
+          "name": "addApi",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 104,
+              "column": 8
+            },
+            "end": {
+              "line": 106,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "name"
+            },
+            {
+              "name": "api"
+            }
+          ]
+        },
+        {
+          "name": "api",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 107,
+              "column": 8
+            },
+            "end": {
+              "line": 113,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "name"
+            }
+          ]
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 100,
+          "column": 6
+        },
+        "end": {
+          "line": 114,
+          "column": 7
+        }
+      },
+      "privacy": "public",
+      "name": "ExmgSwaggerClient"
     }
   ]
 }

@@ -1,5 +1,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
+<link rel="import" href="exmg-swagger-common.html">
+
 <script>
 'use strict';
 {
@@ -23,7 +25,7 @@
   * @extends Polymer.Element
   * @summary Custom element to connect to a restfull API layer using a Swagger 2.0 schema
   */
-  class DataConnectionElement extends Polymer.Element {
+  class DataConnectionElement extends Exmg.SwaggerCommonMixin(Polymer.Element) {
     static get is() {
       return 'exmg-swagger-client';
     }
@@ -143,7 +145,7 @@
 
     static get observers() {
       return [
-        '_requestOptionsChanged(api, operationId, auto, debounceDuration)'
+        '_requestOptionsChanged(swaggerClientApi, api, operationId, auto, debounceDuration)'
       ];
     }
 
@@ -158,7 +160,7 @@
      *
      */
     generateRequest() {
-      if (!Exmg.DataConnectionConfig) {
+      if (!this.swaggerClientApi) {
         throw new Error('Data connection config not loaded!');
       }
 
@@ -170,14 +172,14 @@
         return Promise.reject(new Error(api.error));
       }
 
-      const {apis} = Exmg.DataConnectionConfig;
+      const {apis} = this.swaggerClientApi;
 
       if (typeof apis[api][this.operationId] !== 'function') {
         this._handleError(`Operation Id ${this.operationId} not found`);
         return Promise.reject(new Error(this._getLastError()));
       }
 
-      const request = Exmg.DataConnectionConfig.apis[api][this.operationId];
+      const request = this.swaggerClientApi.apis[api][this.operationId];
       this._setLoading(true);
 
       return request(this.params).then(
@@ -212,7 +214,7 @@
         return ({error: `No api given`});
       }
 
-      const isAvailable = Exmg.DataConnectionConfig.spec.tags.find(tag => tag.name === this.api);
+      const isAvailable = this.swaggerClientApi.spec.tags.find(tag => tag.name === this.api);
 
       if (isAvailable) {
         return isAvailable.name;
@@ -222,6 +224,9 @@
     }
 
     _requestOptionsChanged() {
+      if (!this.swaggerClientApi) {
+        return;
+      }
       this._debouncer = Polymer.Debouncer.debounce(
         this._debouncer,
         Polymer.Async.timeOut.after(this.debounceDuration), () => {

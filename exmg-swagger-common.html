@@ -54,7 +54,7 @@
           return;
         }
         try {
-          this.swaggerClientApi = Exmg.swaggerClient.api(apiName);
+          this.swaggerClientApi = Exmg.swaggerClients.api(apiName);
         } catch (e) {
           /* Api hasn't been initialized yet */
           var self = this;

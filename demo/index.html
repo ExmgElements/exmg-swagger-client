@@ -15,7 +15,6 @@
     <link rel="import" href="../../iron-input/iron-input.html">
     <link rel="import" href="../../iron-form/iron-form.html">
 
-    <link rel="import" href="../exmg-swagger-client-common.html">
     <link rel="import" href="../exmg-swagger-client-config.html">
     <link rel="import" href="../exmg-swagger-client.html">
 
@@ -71,7 +70,8 @@
           <exmg-swagger-client-config
             id="clientConfig"
             swagger-url="[[swaggerUrl]]"
-            server-url="[[serverUrl]]"></exmg-swagger-client-config>
+            server-url="[[serverUrl]]"
+            api-initialized="{{apiInitialized}}"></exmg-swagger-client-config>
 
           <!-- Connection element enabled after swagger api is initialized -->
           <exmg-swagger-client
@@ -156,7 +156,7 @@
       </template>
       <script>
         window.addEventListener('WebComponentsReady', () => {
-          class DataConnectionDemo extends Exmg.SwaggerCommonMixin(Polymer.GestureEventListeners(Polymer.Element)) {
+          class DataConnectionDemo extends Polymer.GestureEventListeners(Polymer.Element) {
             static get is() {
               return 'swagger-client-demo';
             }
@@ -207,12 +207,11 @@
                   type: Object,
                   computed: '_selectedMethodChanged(selectedMethodType)',
                 },
+                apiInitialized: {
+                  type: Boolean,
+                  observer: '_apiInitialized',
+                }
               };
-            }
-            static get observers() {
-              return [
-                '_apiReady(swaggerClientApi)',
-              ];
             }
             connectedCallback() {
               super.connectedCallback();
@@ -223,9 +222,6 @@
                 console.log('requestInterceptor', req);
               };
               this.$.clientConfig.initSwagger();
-            }
-            _responseInterceptor(res) {
-              console.log('_responseInterceptor1', res);
             }
             _submit() {
               const form = this.shadowRoot.querySelector('#form');
@@ -273,14 +269,18 @@
                 this._addLog(`Response Body: ` + JSON.stringify(d.body, null, '\t'));
               }
             }
-            _apiReady(api) {
-              if (!api) {
+            _apiInitialized(initialized) {
+              if(!initialized) {
+                return;
+              }
+              const {swaggerClientApi} = this.$.connection;
+              if (!swaggerClientApi) {
                 return;
               }
               this._addLog('Swagger Client Initialised');
-              this.set('pathOptions', Object.keys(api.spec.paths)
+              this.set('pathOptions', Object.keys(swaggerClientApi.spec.paths)
                 .map((k) => ({
-                  path: k, obj: api.spec.paths[k]
+                  path: k, obj: swaggerClientApi.spec.paths[k]
                 })));
             }
           }

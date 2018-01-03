@@ -45,6 +45,13 @@
           responseInterceptor: Function,
           requestInterceptor: Function,
 
+          apiInitialized: {
+            type: Boolean,
+            notify: true,
+            readOnly: true,
+            value: false,
+          },
+
           auto: {
             type: Boolean,
             value: false,
@@ -58,12 +65,14 @@
         }
       }
       _serverUrlChanged(url) {
-        if (Exmg.swaggerClient && this.serverUrl) {
-          Exmg.swaggerClient.url = this.serverUrl;
+        debugger;
+        if (Exmg.swaggerClients.api(this.name) && this.serverUrl) {
+          Exmg.swaggerClients.api(this.name).url = this.serverUrl;
         }
       }
       _reset() {
-        Exmg.swaggerClient = null;
+        this._setApiInitialized(false);
+        Exmg.swaggerClients.setApi(this.name, null);
       }
       initSwagger() {
         /* Load swagger api */
@@ -82,9 +91,11 @@
           }
 
           /* Add swagger api to Exmg scope */
-          window.Exmg.swaggerClient.addApi(this.name, swaggerClient);
+          window.Exmg.swaggerClients.setApi(this.name, swaggerClient);
 
           this.dispatchEvent(new CustomEvent('swagger-api-initialized', {bubbles: true, composed: true, detail: {name: this.name}}));
+
+          setTimeout(_ => this._setApiInitialized(true), 0);
         });
 
       }
@@ -97,12 +108,12 @@
     window.Exmg = window.Exmg || {};
     Exmg.DataConnectionConfigElement = DataConnectionConfigElement;
 
-    if (!window.Exmg.swaggerClient) {
+    if (!window.Exmg.swaggerClients) {
       class ExmgSwaggerClient {
         constructor() {
           this.apis = {};
         }
-        addApi(name, api) {
+        setApi(name, api) {
           this.apis[name] = api;
         }
         api(name) {
@@ -113,7 +124,7 @@
           return api;
         }
       }
-      window.Exmg.swaggerClient = new ExmgSwaggerClient();
+      window.Exmg.swaggerClients = new ExmgSwaggerClient();
     }
 
   }

@@ -5,9 +5,20 @@
   'use strict';
   {
     /**
-    * Data connection Config - Polymer element that inits swaggerClient through config to access globaly
+    * Element for initializing Swagger Client Api's
     *
-    **/
+    * ```html
+    * <exmg-swagger-client-config swagger-url="[[swaggerUrl]]"></exmg-swagger-client-config>
+    * ```
+    *
+    * @customElement
+    * @polymer
+    * @group Exmg Core Elements
+    * @element exmg-swagger-client-config
+    * @memberof Exmg
+    * @extends Polymer.Element
+    * @summary Custom element to initialize Swagger Client Api's
+    */
     class DataConnectionConfigElement extends Polymer.Element {
       static get is() {
         return 'exmg-swagger-client-config';
@@ -26,7 +37,7 @@
             value: ''
           },
           /**
-           * Url pointing to the deagger 2.0 json file
+           * Url pointing to the swagger 2.0 json file
            */
           swaggerUrl: {
             type: String,
@@ -42,30 +53,30 @@
             observer: '_serverUrlChanged',
           },
 
+          /**
+           * hook into the response globaly
+           */
           responseInterceptor: Function,
+          /**
+           * hook into the requests globaly
+           */
           requestInterceptor: Function,
-
+          /**
+           * Gives the initialization state of the API
+           */
           apiInitialized: {
             type: Boolean,
             notify: true,
             readOnly: true,
             value: false,
           },
-
-          auto: {
-            type: Boolean,
-            value: false,
-          }
         };
       }
       _swaggerUrlChanged(url) {
-        if (this.auto) {
-          this._reset();
-          this.initSwagger();
-        }
+        this._reset();
+        this.initSwagger();
       }
       _serverUrlChanged(url) {
-        debugger;
         if (Exmg.swaggerClients.api(this.name) && this.serverUrl) {
           Exmg.swaggerClients.api(this.name).url = this.serverUrl;
         }

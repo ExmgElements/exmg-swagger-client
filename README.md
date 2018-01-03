@@ -1,6 +1,23 @@
 exmg-swagger-client
 ================
 
+Element for using Swagger 2.0 generated API
+
+Example:
+```html
+<exmg-swagger-client-config
+  swagger-url="http://petstore.swagger.io/v2/swagger.json">
+</exmg-swagger-client-config>
+
+<exmg-swagger-client
+  api="pet"
+  operation-id="getPet"
+  params='{petId:'324421445'}'
+  last-response="{{response}}"
+  last-error="{{error}}"
+  auto></exmg-swagger-client>
+```
+
 Please visit the [API Documentation and demo](http://ExmgElements.github.io/exmg-swagger-client/) page for more information.
 
 ## Install the Polymer-CLI

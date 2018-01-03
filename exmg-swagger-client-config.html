@@ -77,8 +77,8 @@
         this.initSwagger();
       }
       _serverUrlChanged(url) {
-        if (Exmg.swaggerClients.api(this.name) && this.serverUrl) {
-          Exmg.swaggerClients.api(this.name).url = this.serverUrl;
+        if (Exmg.swaggerClients.getApi(this.name) && this.serverUrl) {
+          Exmg.swaggerClients.getApi(this.name).url = this.serverUrl;
         }
       }
       _reset() {
@@ -126,6 +126,9 @@
         }
         setApi(name, api) {
           this.apis[name] = api;
+        }
+        getApi(name) {
+          this.apis[name];
         }
         api(name) {
           const api = this.apis[name];

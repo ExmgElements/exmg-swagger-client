@@ -7978,7 +7978,7 @@
           ]
         },
         {
-          "name": "api",
+          "name": "getApi",
           "description": "",
           "privacy": "public",
           "sourceRange": {
@@ -7987,7 +7987,28 @@
               "column": 8
             },
             "end": {
-              "line": 135,
+              "line": 131,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "name"
+            }
+          ]
+        },
+        {
+          "name": "api",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 132,
+              "column": 8
+            },
+            "end": {
+              "line": 138,
               "column": 9
             }
           },
@@ -8008,7 +8029,7 @@
           "column": 6
         },
         "end": {
-          "line": 136,
+          "line": 139,
           "column": 7
         }
       },

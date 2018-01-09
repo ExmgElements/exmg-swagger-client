@@ -1,4 +1,4 @@
-sudo: false
+sudo: required
 language: node_js
 node_js: 8.0
 
@@ -7,7 +7,7 @@ cache:
     - node_modules
 
 install:
-- npm install
+- npm install -g polymer-cli
 - bower install
 
 before_script:
@@ -16,7 +16,13 @@ before_script:
 
 addons:
   firefox: latest
-  google-chrome: latest
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
 
-script: xvfb-run polymer test
+script:
+- xvfb-run polymer test
+
 dist: trusty

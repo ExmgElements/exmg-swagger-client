@@ -57,10 +57,12 @@
            * hook into the response globaly
            */
           responseInterceptor: Function,
+
           /**
            * hook into the requests globaly
            */
           requestInterceptor: Function,
+
           /**
            * Gives the initialization state of the API
            */
@@ -104,9 +106,13 @@
           /* Add swagger api to Exmg scope */
           window.Exmg.swaggerClients.setApi(this.name, swaggerClient);
 
-          this.dispatchEvent(new CustomEvent('swagger-api-initialized', {bubbles: true, composed: true, detail: {name: this.name}}));
+          this.dispatchEvent(new CustomEvent('swagger-api-initialized', {bubbles: true, composed: true, detail: {
+            name: this.name, swaggerClient: swaggerClient}
+          }));
 
           setTimeout(_ => this._setApiInitialized(true), 0);
+
+          return swaggerClient;
         });
 
       }
@@ -128,7 +134,7 @@
           this.apis[name] = api;
         }
         getApi(name) {
-          this.apis[name];
+          return this.apis[name];
         }
         api(name) {
           const api = this.apis[name];

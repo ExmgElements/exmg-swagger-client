@@ -28,6 +28,25 @@
   * @summary Custom element to connect to a restfull API layer using a Swagger 2.0 schema
   */
   class DataConnectionElement extends Exmg.SwaggerCommonMixin(Polymer.Element) {
+
+    /**
+     * Fired when an error occurse
+     * @event exmg-swagger-error
+     * @param {Event} event
+     */
+
+    /**
+     * Fired when an request is send
+     * @event exmg-swagger-request
+     * @param {Event} event
+     */
+
+    /**
+     * Fired when an server response is received
+     * @event exmg-swagger-response
+     * @param {Event} event
+     */
+
     static get is() {
       return 'exmg-swagger-client';
     }
@@ -162,48 +181,62 @@
      *
      */
     generateRequest() {
-      if (!this.swaggerClientApi) {
-        throw new Error('Data connection config not loaded!');
-      }
 
-      const api = this._apiAvailable();
-      console.log('generateRequest', api, this.operationId, this.params);
+      return new Promise((resolve, reject) => {
+        if (!this.swaggerClientApi) {
+          this._handleError('Data connection config not loaded!');
+          return;
+        }
 
-      if (api.error) {
-        this._handleError(api.error);
-        return Promise.reject(new Error(api.error));
-      }
+        const api = this._apiAvailable();
+        console.log('generateRequest', api, this.operationId, this.params);
 
-      const {apis} = this.swaggerClientApi;
+        if (api.error) {
+          this._handleError(api.error);
+          reject(Error(this.lastError.error));
+        }
 
-      if (typeof apis[api][this.operationId] !== 'function') {
-        this._handleError(`Operation Id ${this.operationId} not found`);
-        return Promise.reject(new Error(this._getLastError()));
-      }
+        const {apis} = this.swaggerClientApi;
 
-      const request = this.swaggerClientApi.apis[api][this.operationId];
-      this._setLoading(true);
+        if (typeof apis[api][this.operationId] !== 'function') {
+          this._handleError(`Operation Id ${this.operationId} not found`);
+          reject(Error(this.lastError.error));
+        }
 
-      return request(this.params).then(
-        this._boundHandleResponse
-      ).catch(
-        this._boundHandleError
-      );
+        const request = this.swaggerClientApi.apis[api][this.operationId];
+        this._setLoading(true);
+
+        this.dispatchEvent(new CustomEvent('exmg-swagger-request', {
+          bubbles: this.bubbles,
+          composed: true,
+          detail: {
+            request: request,
+            api: this.api,
+            operationId: this.operationId,
+            params: this.params,
+          }
+        }));
+
+        resolve(request(this.params).then(
+          this._boundHandleResponse
+        ).catch(
+          this._boundHandleError
+        ));
+      });
     }
 
     _handleError(error) {
       this._setLastError({error: error});
       this._setLastResponse(null);
       this._setLoading(false);
-      this.dispatchEvent(new CustomEvent('error', {bubbles: this.bubbles, composed: true, detail: {error: error}}));
-      throw error;
+      this.dispatchEvent(new CustomEvent('exmg-swagger-error', {bubbles: this.bubbles, composed: true, detail: {error: error}}));
     }
 
     _handleResponse(response) {
       this._setLastResponse(response);
       this._setLastError(null);
       this._setLoading(false);
-      this.dispatchEvent(new CustomEvent('response', {bubbles: this.bubbles, composed: true, detail: response}));
+      this.dispatchEvent(new CustomEvent('exmg-swagger-response', {bubbles: this.bubbles, composed: true, detail: response}));
       return response;
     }
 
@@ -216,10 +249,10 @@
         return ({error: `No api given`});
       }
 
-      const isAvailable = this.swaggerClientApi.spec.tags.find(tag => tag.name === this.api);
+      const isAvailable = this.swaggerClientApi.apis.hasOwnProperty(this.api);
 
       if (isAvailable) {
-        return isAvailable.name;
+        return this.api;
       }
 
       return ({error: `Api ${this.api} not found`});

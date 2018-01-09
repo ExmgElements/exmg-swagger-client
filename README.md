@@ -1,4 +1,4 @@
-exmg-swagger-client
+exmg-swagger-client [![Build Status](https://travis-ci.org/ExmgElements/exmg-swagger-client.svg?branch=master)](https://travis-ci.org/ExmgElements/exmg-swagger-client)
 ================
 
 Element for using Swagger 2.0 generated API

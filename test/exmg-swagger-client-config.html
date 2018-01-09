@@ -195,7 +195,7 @@
       suite('basic usage', _ => {
         test('setup swagger API, requiring only `swaggerUrl`', (done) => {
           request.swaggerUrl = '/responds_to_get_with_swagger_json_api';
-          timePasses(100).then(_ => {
+          timePasses(200).then(_ => {
             expect(request.apiInitialized).to.be.equal(true);
             done();
           });

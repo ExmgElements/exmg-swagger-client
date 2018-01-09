@@ -255,7 +255,7 @@
 
       suite('basic usage', _ => {
         test('Test basic api pet list call', function(done) {
-          timePasses(20).then(_ => {
+          timePasses(100).then(_ => {
             fixtureNodes[1].generateRequest().then((res) => {
               expect(res.body.length).to.be.equal(2);
               done();
@@ -324,7 +324,7 @@
       suite('when debouncing requests', function() {
         test('only requests a single resource', function(done) {
           const debouncedGet = fixture('DebouncedGet');
-          timePasses(20).then(_ => {
+          timePasses(100).then(_ => {
             debouncedGet[1].auto = true;
             debouncedGet[1]._requestOptionsChanged();
             expect(debouncedGet[1].lastResponse).to.be.equal(undefined);

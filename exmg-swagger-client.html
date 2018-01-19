@@ -236,7 +236,7 @@
       this._setLastError(null);
       this._setLoading(false);
       this.dispatchEvent(new CustomEvent('exmg-swagger-response', {bubbles: this.bubbles, composed: true, detail: response}));
-      return response;
+      return response.body;
     }
 
     /**

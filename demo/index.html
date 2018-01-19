@@ -176,11 +176,11 @@
                 },
                 swaggerUrl: {
                   type: String,
-                  value: '',
+                  value: 'playtotv.json',
                 },
                 serverUrl: {
                   type: String,
-                  value: '',
+                  value: 'https://backend.winview-dev-feature.playtotv.com/api/1/',
                 },
                 api: {
                   type: String,
@@ -262,11 +262,7 @@
             }
             _handleNewData(d) {
               if (d) {
-                this._addLog(`Request URL: ${d.url}`);
-                this._addLog(`Status Code: ${d.status}`);
-                this._addLog(`Status Text: ${d.statusText}`);
-                this._addLog(`Headers: ${JSON.stringify(d.headers)}`);
-                this._addLog(`Response Body: ` + JSON.stringify(d.body, null, '\t'));
+                this._addLog(`Response: ${JSON.stringify(d, null, '\t')}}`);
               }
             }
             _apiInitialized(initialized) {

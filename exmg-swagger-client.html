@@ -181,7 +181,6 @@
      *
      */
     generateRequest() {
-
       return new Promise((resolve, reject) => {
         if (!this.swaggerClientApi) {
           this._handleError('Data connection config not loaded!');
@@ -233,7 +232,7 @@
     }
 
     _handleResponse(response) {
-      this._setLastResponse(response);
+      this._setLastResponse(response.body);
       this._setLastError(null);
       this._setLoading(false);
       this.dispatchEvent(new CustomEvent('exmg-swagger-response', {bubbles: this.bubbles, composed: true, detail: response}));

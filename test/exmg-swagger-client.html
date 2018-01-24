@@ -41,7 +41,7 @@
     </template>
   </test-fixture>
   <script>
-    suite('<exmg-swagger-client-config>', _ => {
+    suite('<exmg-swagger-client>', _ => {
       let fixtureNodes;
       const fetchMock = window.fetchMock;
 
@@ -257,7 +257,7 @@
         test('Test basic api pet list call', function(done) {
           timePasses(100).then(_ => {
             fixtureNodes[1].generateRequest().then((res) => {
-              expect(res.body.length).to.be.equal(2);
+              expect(res.length).to.be.equal(2);
               done();
             });
           });
@@ -295,7 +295,7 @@
           const bubbleEvents = fixture('Atrributes');
           bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
             bubbleEvents[1].generateRequest().catch((e) => {
-              expect(e.message).to.be.equal('Operation Id  not found');
+              expect(e).to.be.equal('Operation Id  not found');
               done();
             });
           });
@@ -305,7 +305,7 @@
           const bubbleEvents = fixture('Atrributes');
           bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
             bubbleEvents[2].generateRequest().catch((e) => {
-              expect(e.message).to.be.equal('No api given');
+              expect(e).to.be.equal('No api given');
               done();
             });
           });
@@ -315,7 +315,7 @@
           const bubbleEvents = fixture('Atrributes');
           bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
             bubbleEvents[3].generateRequest().catch((e) => {
-              expect(e.message).to.be.equal('Api x not found');
+              expect(e).to.be.equal('Api x not found');
               done();
             });
           });

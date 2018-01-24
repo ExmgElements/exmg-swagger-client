@@ -192,14 +192,14 @@
 
         if (api.error) {
           this._handleError(api.error);
-          reject(Error(this.lastError.error));
+          throw new Error(this.lastError.error);
         }
 
         const {apis} = this.swaggerClientApi;
 
         if (typeof apis[api][this.operationId] !== 'function') {
           this._handleError(`Operation Id ${this.operationId} not found`);
-          reject(Error(this.lastError.error));
+          throw new Error(this.lastError.error);
         }
 
         const request = this.swaggerClientApi.apis[api][this.operationId];
@@ -229,6 +229,7 @@
       this._setLastResponse(null);
       this._setLoading(false);
       this.dispatchEvent(new CustomEvent('exmg-swagger-error', {bubbles: this.bubbles, composed: true, detail: {error: error}}));
+      throw error;
     }
 
     _handleResponse(response) {

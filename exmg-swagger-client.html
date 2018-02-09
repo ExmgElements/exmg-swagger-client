@@ -199,6 +199,8 @@
 
         if (typeof apis[api][this.operationId] !== 'function') {
           this._handleError(`Operation Id ${this.operationId} not found`);
+          console.log(`Operation Id ${this.operationId} not found. Maybe one of these?`);
+          Object.keys(apis[api]).forEach(k => console.log(k));
           throw new Error(this.lastError.error);
         }
 

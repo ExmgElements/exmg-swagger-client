@@ -13,6 +13,10 @@
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../../paper-card/paper-card.html">
     <link rel="import" href="../../iron-input/iron-input.html">
+    <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+    <link rel="import" href="../../paper-tabs/paper-tabs.html">
+    <link rel="import" href="../../paper-tabs/paper-tab.html">
+    <link rel="import" href="../../iron-pages/iron-pages.html">
     <link rel="import" href="../../iron-form/iron-form.html">
 
     <link rel="import" href="../exmg-swagger-client-config.html">
@@ -28,17 +32,19 @@
       <template>
         <custom-style>
           <style>
+            * {
+              box-sizing: border-box
+            }
             pre {
-              background: white;
-              padding: 22px;
+              padding: 8px;
             }
             select,
             input {
-              width: 450px;
+              width: 100%;
               padding: 6px;
             }
-            input.small{
-              width: 150px;
+            iron-input {
+              width: 100%;
             }
             select {
               background: white;
@@ -62,6 +68,54 @@
             p{
               margin: 16px 4px !important;
             }
+            .horizontal{
+              @apply --layout-horizontal;
+            }
+            .horizontal > label {
+              width: 320px;
+              margin-right: 8px;
+            }
+
+            .horizontal > * {
+              @apply --layout-flex;
+            }
+            .info {
+              padding: 4px;
+              overflow: hidden;
+              font-size: 0.7em;
+            }
+            .info ul {
+              list-style-type: none;
+              padding: 0;
+            }
+            .info ul li {
+              font-weight: 600;
+              padding: 4px;
+            }
+            .info ul li span:first-child{
+              display: inline-block;
+              font-weight: 300;
+              width: 130px;
+            }
+            table th {
+              padding: 4px;
+              min-width: 60px;
+              text-align: left;
+              border-bottom: 1px solid #999;
+            }
+            table pre {
+              background: none;
+              padding: 0px;
+              margin: 0px;
+            }
+            table td {
+              padding: 4px;
+              vertical-align: top;
+            }
+            paper-tabs {
+              background: rgb(216, 27, 96);
+              color: white;
+            }
           </style>
         </custom-style>
 
@@ -83,7 +137,7 @@
 
           <h3>exmg-swagger-client demo</h3>
 
-          <div>
+          <div class="horizontal">
             <!-- Swagger Url -->
             <label>
               <span>Swagger Url</span>
@@ -99,10 +153,9 @@
                 <input>
               </iron-input>
             </label>
-            <label>
           </div>
 
-          <div>
+          <div class="horizontal">
             <!-- Paths -->
             <label>
               <span>Paths</span>
@@ -132,26 +185,57 @@
             </template>
           </div>
 
-          <!-- Params needed for selected path/method -->
+          <br>
+          <br>
           <template is="dom-if" if="[[selectedMethod]]" restamp="true">
-            <iron-form id="form">
-              <form>
-                <div>
-                  <template is="dom-repeat" items="[[selectedMethod.parameters]]" index-as="index">
-                    <label>
-                      <span>[[item.name]] <template is="dom-if" if="[[item.required]]" restamp="true"><strong> * </strong></template> ([[item.description]] - [[item.type]])</span>
-                      <input name="[[item.name]]">
-                    </label>
-                  </template>
-                </div>
-                <br>
-                <button on-tap="_submit">[[selectedMethodType]]</button> (* required)
-              </form>
-            </iron-form>
-          </template>
+            <paper-tabs selected="{{selectedTab}}">
+              <paper-tab>Test</paper-tab>
+              <paper-tab>Info</paper-tab>
+            </paper-tabs>
 
-          <hr>
-          <pre><template is="dom-repeat" items="[[history]]" index-as="index">[[item.date]] - [[item.data]]<br></template></pre>
+            <iron-pages selected="[[selectedTab]]">
+              <div class="info">
+                <template is="dom-if" if="[[selectedMethod]]">
+                  <div class="horizontal">
+                    <ul>
+                      <li><span>Summary: </span><span>[[selectedMethod.summary]]</span></li>
+                      <li><span>Operation Id: </span><span>[[selectedMethod.operationId]]</span></li>
+                      <li><span>Consumes: </span><span>[[selectedMethod.consumes]]</span></li>
+                      <li><span>Produces: </span><span>[[selectedMethod.produces]]</span></li>
+                    </ul>
+                    <pre>[[exmpleSetup]]</pre>
+                  </div>
+                  <table>
+                    <tr><th>In</th><th>description</th><th>Name</th><th>Required</th><th>Type / Schema</th></tr>
+                    <template is="dom-repeat" items="[[selectedMethod.parameters]]">
+                      <tr><td>[[item.in]]</td><td>[[item.description]]</td><td>[[item.name]]</td><td>[[item.required]]</td><td><pre>[[_renderType(item)]]</pre></td></tr>
+                    </template>
+                  </table>
+                </template>
+              </div>
+              <div class="info">
+                <div class="horizontal">
+                  <iron-form id="form">
+                    <form>
+                      <div>
+                        <template is="dom-repeat" items="[[selectedMethod.parameters]]" index-as="index">
+                          <label>
+                            <span>[[item.name]] <template is="dom-if" if="[[item.required]]" restamp="true"><strong> * </strong></template> ([[item.description]] - [[item.type]])</span>
+                            <input name="[[item.name]]">
+                          </label>
+                        </template>
+                      </div>
+                      <br>
+                      <button on-tap="_submit">[[selectedMethodType]]</button> (* required)
+                    </form>
+                  </iron-form>
+                </div>
+                <pre>
+                  <template is="dom-repeat" items="[[history]]" index-as="index">[[item.date]] - [[item.data]]<br></template>
+                </pre>
+              </div>
+            </iron-pages>
+          </template>
         </div>
       </template>
       <script>
@@ -207,11 +291,29 @@
                   type: Object,
                   computed: '_selectedMethodChanged(selectedMethodType)',
                 },
+                overview: {
+                  type: String,
+                  computed: '_generateOverview(selectedMethod)',
+                },
                 apiInitialized: {
                   type: Boolean,
                   observer: '_apiInitialized',
+                },
+                selectedTab: {
+                  type: Number,
+                  value: 0,
                 }
               };
+            }
+            _renderType(item) {
+              console.log('item', item);
+              if (item.type) {
+                return item.type;
+              }
+              return JSON.stringify(item.schema, null, '\t');
+            }
+            _generateOverview(method) {
+              console.log('method', method);
             }
             connectedCallback() {
               super.connectedCallback();
@@ -230,7 +332,18 @@
               connection.resource = this.selectedMethod.tags[0];
               connection.method = this.selectedMethod.operationId;
               connection.params = form.serializeForm();
+              this._updateExample(connection.params);
               connection.generateRequest();
+            }
+            _updateExample(p) {
+              const params = JSON.stringify(p);
+              this.exmpleSetup = 
+`<exmg-swagger-client
+  api="${this.api}"
+  operation-id="${this.operationId}"
+  params="${params}">
+</exmg-swagger-client>
+              `;
             }
             _pathNameChanged() {
               this.set('selectedMethodType', null);

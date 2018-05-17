@@ -1,33 +1,54 @@
 {
-  "name": "exmg-swagger-client",
-  "private": true,
-  "version": "1.0.0",
+  "name": "@exmg/exmg-swagger-client",
+  "flat": true,
+  "version": "3.0.0",
   "description": "Element for using Swagger 2.0 generated API",
-  "main": "exmg-swagger-client.html",
-  "repository": "ExmgElements/exmg-swagger-client",
-  "keywords": [
-    "Exmg",
-    "ExmgElements",
-    "exmg-swagger-client",
-    "web-components",
-    "web-component",
-    "polymer",
-    "swagger"
+  "contributors": [
+    "Ex Machina Group"
   ],
-  "author": "Ex Machina",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "swagger",
+    "swagger-client"
+  ],
+  "main": "exmg-swagger-client.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ExmgElements/exmg-swagger-client.git"
+  },
+  "license": "MIT License",
+  "homepage": "http://exmg.github.io/ExmgElements/exmg-swagger-client/",
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0-pre.1"
+  },
   "devDependencies": {
-    "bower": "latest",
-    "eslint": "^4.15.0",
+    "@polymer/iron-pages": "^3.0.0-pre.19",
+    "@polymer/iron-ajax": "^3.0.0-pre.19",
+    "@polymer/iron-component-page": "^3.0.0-pre.19",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
+    "@polymer/iron-input": "^3.0.0-pre.19",
+    "@polymer/paper-styles": "^3.0.0-pre.19",
+    "@polymer/iron-flex-layout": "^3.0.0-pre.19",
+    "@polymer/iron-form": "^3.0.0-pre.19",
+    "@polymer/paper-card": "^3.0.0-pre.19",
+    "@polymer/paper-tabs": "^3.0.0-pre.19",
+    "@webcomponents/webcomponentsjs": "^2.0.0-beta.2",
+    "eslint": "^4.11.0",
     "eslint-config-exmg": "latest",
     "eslint-plugin-html": "^3.0.0",
-    "fetch-mock": "^6.0.0-beta.7",
-    "polymer-cli": "^1.2.0",
-    "web-component-tester": "^6.4.1"
+    "wct-browser-legacy": "^1.0.0"
   },
-  "homepage": "https://github.com/ExmgElements/",
+  "resolutions": {
+    "@webcomponents/webcomponentsjs": "2.0.0",
+    "type-detect": "1.0.0",
+    "supports-color": "3.1.2",
+    "inherits": "2.0.3",
+    "samsam": "1.1.2"
+  },
   "scripts": {
-    "lint": "polymer lint --rules polymer-2 --input *.html",
+    "lint": "polymer lint --rules polymer-3 --input *.js",
     "eslint": "eslint . --ext js,html --ignore-path .gitignore",
-    "analyze": "polymer analyze --input exmg-swagger-client-config.html exmg-swagger-client.html exmg-swagger-common.html > analysis.json"
+    "analyze": "polymer analyze --input exmg-swagger-client.js exmg-swagger-config.js exmg-swagger-common.js > analysis.json"
   }
 }

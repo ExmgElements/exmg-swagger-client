@@ -3,13 +3,13 @@
 <head>
   <title>exmg-swagger-client-config</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <script src="../node_modules/fetch-mock/es5/client-bundle.js"></script>
+  <script src="@webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="web-component-tester/browser.js"></script>
+  <script src="fetch-mock/es5/client-bundle.js"></script>
 
-  <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
-  <link rel="import" href="../exmg-swagger-client-config.html">
+  <script type="module" src="@polymer/polymer/polymer.js"></script>
+  <script type="module" src="@polymer/promise-polyfill/promise-polyfill.js"></script>
+  <script type="module" src="../exmg-swagger-client-config.js"></script>
 </head>
 <body>
   <test-fixture id="BasicRequest">
@@ -17,221 +17,224 @@
       <exmg-swagger-client-config></exmg-swagger-client-config>
     </template>
   </test-fixture>
-  <script>
-    suite('<exmg-swagger-client-config>', _ => {
-      let request;
-      const fetchMock = window.fetchMock;
+  <script type="module">
+import '@polymer/polymer/polymer.js';
+import '@polymer/promise-polyfill/promise-polyfill.js';
+import '../exmg-swagger-client-config.js';
+suite('<exmg-swagger-client-config>', _ => {
+  let request;
+  const fetchMock = window.fetchMock;
 
-      const timePasses = (ms) => {
-        return new Promise((resolve) => {
-          window.setTimeout(_ => {
-            resolve();
-          }, ms);
-        });
-      };
+  const timePasses = (ms) => {
+    return new Promise((resolve) => {
+      window.setTimeout(_ => {
+        resolve();
+      }, ms);
+    });
+  };
 
-      setup(() => {
-        fetchMock.get('/responds_to_get_with_swagger_json_api', `{
-            "swagger": "2.0",
-            "info": {
-              "version": "1.0.0",
-              "title": "Swagger Petstore",
-              "license": {
-                "name": "MIT"
-              }
-            },
-            "host": "petstore.swagger.io",
-            "basePath": "/v1",
-            "schemes": [
-              "http"
-            ],
-            "consumes": [
-              "application/json"
-            ],
-            "produces": [
-              "application/json"
-            ],
-            "paths": {
-              "/pets": {
-                "get": {
-                  "summary": "List all pets",
-                  "operationId": "listPets",
-                  "tags": [
-                    "pets"
-                  ],
-                  "parameters": [
-                    {
-                      "name": "limit",
-                      "in": "query",
-                      "description": "How many items to return at one time (max 100)",
-                      "required": false,
-                      "type": "integer",
-                      "format": "int32"
+  setup(() => {
+    fetchMock.get('/responds_to_get_with_swagger_json_api', `{
+        "swagger": "2.0",
+        "info": {
+          "version": "1.0.0",
+          "title": "Swagger Petstore",
+          "license": {
+            "name": "MIT"
+          }
+        },
+        "host": "petstore.swagger.io",
+        "basePath": "/v1",
+        "schemes": [
+          "http"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "paths": {
+          "/pets": {
+            "get": {
+              "summary": "List all pets",
+              "operationId": "listPets",
+              "tags": [
+                "pets"
+              ],
+              "parameters": [
+                {
+                  "name": "limit",
+                  "in": "query",
+                  "description": "How many items to return at one time (max 100)",
+                  "required": false,
+                  "type": "integer",
+                  "format": "int32"
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "An paged array of pets",
+                  "headers": {
+                    "x-next": {
+                      "type": "string",
+                      "description": "A link to the next page of responses"
                     }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "An paged array of pets",
-                      "headers": {
-                        "x-next": {
-                          "type": "string",
-                          "description": "A link to the next page of responses"
-                        }
-                      },
-                      "schema": {
-                        "$ref": "#/definitions/Pets"
-                      }
-                    },
-                    "default": {
-                      "description": "unexpected error",
-                      "schema": {
-                        "$ref": "#/definitions/Error"
-                      }
-                    }
+                  },
+                  "schema": {
+                    "$ref": "#/definitions/Pets"
                   }
                 },
-                "post": {
-                  "summary": "Create a pet",
-                  "operationId": "createPets",
-                  "tags": [
-                    "pets"
-                  ],
-                  "responses": {
-                    "201": {
-                      "description": "Null response"
-                    },
-                    "default": {
-                      "description": "unexpected error",
-                      "schema": {
-                        "$ref": "#/definitions/Error"
-                      }
-                    }
-                  }
-                }
-              },
-              "/pets/{petId}": {
-                "get": {
-                  "summary": "Info for a specific pet",
-                  "operationId": "showPetById",
-                  "tags": [
-                    "pets"
-                  ],
-                  "parameters": [
-                    {
-                      "name": "petId",
-                      "in": "path",
-                      "required": true,
-                      "description": "The id of the pet to retrieve",
-                      "type": "string"
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Expected response to a valid request",
-                      "schema": {
-                        "$ref": "#/definitions/Pets"
-                      }
-                    },
-                    "default": {
-                      "description": "unexpected error",
-                      "schema": {
-                        "$ref": "#/definitions/Error"
-                      }
-                    }
+                "default": {
+                  "description": "unexpected error",
+                  "schema": {
+                    "$ref": "#/definitions/Error"
                   }
                 }
               }
             },
-            "definitions": {
-              "Pet": {
-                "required": [
-                  "id",
-                  "name"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "integer",
-                    "format": "int64"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "tag": {
-                    "type": "string"
-                  }
-                }
-              },
-              "Pets": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/Pet"
-                }
-              },
-              "Error": {
-                "required": [
-                  "code",
-                  "message"
-                ],
-                "properties": {
-                  "code": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
-                  "message": {
-                    "type": "string"
+            "post": {
+              "summary": "Create a pet",
+              "operationId": "createPets",
+              "tags": [
+                "pets"
+              ],
+              "responses": {
+                "201": {
+                  "description": "Null response"
+                },
+                "default": {
+                  "description": "unexpected error",
+                  "schema": {
+                    "$ref": "#/definitions/Error"
                   }
                 }
               }
             }
-          }`);
+          },
+          "/pets/{petId}": {
+            "get": {
+              "summary": "Info for a specific pet",
+              "operationId": "showPetById",
+              "tags": [
+                "pets"
+              ],
+              "parameters": [
+                {
+                  "name": "petId",
+                  "in": "path",
+                  "required": true,
+                  "description": "The id of the pet to retrieve",
+                  "type": "string"
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Expected response to a valid request",
+                  "schema": {
+                    "$ref": "#/definitions/Pets"
+                  }
+                },
+                "default": {
+                  "description": "unexpected error",
+                  "schema": {
+                    "$ref": "#/definitions/Error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "definitions": {
+          "Pet": {
+            "required": [
+              "id",
+              "name"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "name": {
+                "type": "string"
+              },
+              "tag": {
+                "type": "string"
+              }
+            }
+          },
+          "Pets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Pet"
+            }
+          },
+          "Error": {
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }`);
 
-        request = fixture('BasicRequest');
-      });
+    request = fixture('BasicRequest');
+  });
 
-      teardown(() => {
-        fetchMock.restore();
-      });
+  teardown(() => {
+    fetchMock.restore();
+  });
 
-      suite('basic usage', _ => {
-        test('setup swagger API, requiring only `swaggerUrl`', (done) => {
-          request.swaggerUrl = '/responds_to_get_with_swagger_json_api';
-          timePasses(200).then(_ => {
-            expect(request.apiInitialized).to.be.equal(true);
-            done();
-          });
-        });
-
-        test('Testing server url override for client API', (done) => {
-          request.swaggerUrl = '/responds_to_get_with_swagger_json_api';
-          request.serverUrl = 'http://myapi.com';
-          request.swaggerClient.then((c) => {
-            expect(c.url).to.be.equal('http://myapi.com');
-            done();
-          });
-        });
-
-        test('Testing global context api access by name', (done) => {
-          request.swaggerUrl = '/responds_to_get_with_swagger_json_api';
-          request.name = 'test';
-          request.swaggerClient.then((c) => {
-            expect(c.name).to.be.equal('test');
-            expect(window.Exmg.swaggerClients.getApi('test')).to.be.an('object');
-            done();
-          });
-        });
-
-        test('Testing event api initialised', (done) => {
-          request.swaggerUrl = '/responds_to_get_with_swagger_json_api';
-          request.name = 'api1';
-          request.addEventListener('swagger-api-initialized', (event) => {
-            assert.equal(event.detail.name, 'api1');
-            done();
-          });
-        });
-
+  suite('basic usage', _ => {
+    test('setup swagger API, requiring only `swaggerUrl`', (done) => {
+      request.swaggerUrl = '/responds_to_get_with_swagger_json_api';
+      timePasses(200).then(_ => {
+        expect(request.apiInitialized).to.be.equal(true);
+        done();
       });
     });
-  </script>
+
+    test('Testing server url override for client API', (done) => {
+      request.swaggerUrl = '/responds_to_get_with_swagger_json_api';
+      request.serverUrl = 'http://myapi.com';
+      request.swaggerClient.then((c) => {
+        expect(c.url).to.be.equal('http://myapi.com');
+        done();
+      });
+    });
+
+    test('Testing global context api access by name', (done) => {
+      request.swaggerUrl = '/responds_to_get_with_swagger_json_api';
+      request.name = 'test';
+      request.swaggerClient.then((c) => {
+        expect(c.name).to.be.equal('test');
+        expect(window.Exmg.swaggerClients.getApi('test')).to.be.an('object');
+        done();
+      });
+    });
+
+    test('Testing event api initialised', (done) => {
+      request.swaggerUrl = '/responds_to_get_with_swagger_json_api';
+      request.name = 'api1';
+      request.addEventListener('swagger-api-initialized', (event) => {
+        assert.equal(event.detail.name, 'api1');
+        done();
+      });
+    });
+
+  });
+});
+</script>
 
 </body>
 </html>

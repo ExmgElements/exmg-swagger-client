@@ -6,21 +6,24 @@
 
     <title>exmg-swagger-client</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../swagger-client/swagger-client.js"></script>
 
-    <link rel="import" href="../../polymer/lib/mixins/gesture-event-listeners.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../../paper-card/paper-card.html">
-    <link rel="import" href="../../iron-input/iron-input.html">
-    <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
-    <link rel="import" href="../../paper-tabs/paper-tabs.html">
-    <link rel="import" href="../../paper-tabs/paper-tab.html">
-    <link rel="import" href="../../iron-pages/iron-pages.html">
-    <link rel="import" href="../../iron-form/iron-form.html">
+    <script type="module" src="../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+    <script type="module" src="../node_modules/@polymer/iron-demo-helpers/demo-snippet.js"></script>
+  
+    <script type="module" src="../node_modules/@polymer/polymer/lib/mixins/gesture-event-listeners.js"></script>
+   
+    <script type="module" src="../node_modules/@polymer/paper-card/paper-card.js"></script>
+    <script type="module" src="../node_modules/@polymer/iron-input/iron-input.js"></script>
+    <script type="module" src="../node_modules/@polymer/iron-flex-layout/iron-flex-layout.js"></script>
+    <script type="module" src="../node_modules/@polymer/paper-tabs/paper-tabs.js"></script>
+    <script type="module" src="../node_modules/@polymer/paper-tabs/paper-tab.js"></script>
+    <script type="module" src="../node_modules/@polymer/iron-pages/iron-pages.js"></script>
+    <script type="module" src="../node_modules/@polymer/iron-form/iron-form.js"></script>
 
-    <link rel="import" href="../exmg-swagger-client-config.html">
-    <link rel="import" href="../exmg-swagger-client.html">
+    <script type="module" src="../exmg-swagger-client-config.js"></script>
+    <script type="module" src="../exmg-swagger-client.js"></script>
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
@@ -28,10 +31,76 @@
     </custom-style>
   </head>
   <body>
-    <dom-module id="swagger-client-demo">
-      <template>
-        <custom-style>
-          <style>
+    <script type="module">
+      import {PolymerElement, html} from '../node_modules/@polymer/polymer/polymer-element.js?module';
+
+      class SwaggerClientDemo extends PolymerElement {
+        static get is() {
+          return 'swagger-client-demo';
+        }
+        static get properties() {
+          return {
+            history: {
+              type: Array,
+              value: () => [],
+            },
+            lastResponse: {
+              type: Object,
+              observer: '_handleNewData',
+            },
+            lastError: {
+              type: Object,
+              observer: '_handleError',
+            },
+            swaggerUrl: {
+              type: String,
+              value: '',
+            },
+            serverUrl: {
+              type: String,
+              value: '',
+            },
+            api: {
+              type: String,
+            },
+            operationId: {
+              type: String,
+            },
+            pathOptions: {
+              type: Array,
+            },
+            selectedPathName: {
+              type: String,
+              observer: '_pathNameChanged',
+            },
+            selectedPath: {
+              type: Object,
+              computed: '_selectedPathChanged(selectedPathName)',
+            },
+            selectedMethodType: {
+              type: String,
+              observer: '_methodTypeChanged',
+            },
+            selectedMethod: {
+              type: Object,
+              computed: '_selectedMethodChanged(selectedMethodType)',
+            },
+            overview: {
+              type: String,
+              computed: '_generateOverview(selectedMethod)',
+            },
+            apiInitialized: {
+              type: Boolean,
+              observer: '_apiInitialized',
+            },
+            selectedTab: {
+              type: Number,
+              value: 0,
+            }
+          };
+        }
+        static get template() {
+          return html`<style>
             * {
               box-sizing: border-box
             }
@@ -117,287 +186,208 @@
               color: white;
             }
           </style>
-        </custom-style>
 
-        <div class="centered">
-          <!-- Initialize swagger client api -->
-          <exmg-swagger-client-config
-            id="clientConfig"
-            swagger-url="[[swaggerUrl]]"
-            server-url="[[serverUrl]]"
-            api-initialized="{{apiInitialized}}"></exmg-swagger-client-config>
+          <div class="centered">
+            <!-- Initialize swagger client api -->
+            <exmg-swagger-client-config id="clientConfig" swagger-url="[[swaggerUrl]]" server-url="[[serverUrl]]" api-initialized="{{apiInitialized}}"></exmg-swagger-client-config>
 
-          <!-- Connection element enabled after swagger api is initialized -->
-          <exmg-swagger-client
-            id="connection"
-            api="[[api]]"
-            operation-id="[[operationId]]"
-            last-error="{{lastError}}"
-            last-response="{{lastResponse}}"></exmg-swagger-client>
+            <!-- Connection element enabled after swagger api is initialized -->
+            <exmg-swagger-client id="connection" api="[[api]]" operation-id="[[operationId]]" last-error="{{lastError}}" last-response="{{lastResponse}}"></exmg-swagger-client>
 
-          <h3>exmg-swagger-client demo</h3>
+            <h3>exmg-swagger-client demo</h3>
 
-          <div class="horizontal">
-            <!-- Swagger Url -->
-            <label>
-              <span>Swagger Url</span>
-              <iron-input bind-value="{{swaggerUrl}}">
-                <input>
-              </iron-input>
-            </label>
-
-            <!-- Server Url -->
-            <label>
-              <span>Server Url</span>
-              <iron-input bind-value="{{serverUrl}}">
-                <input>
-              </iron-input>
-            </label>
-          </div>
-
-          <div class="horizontal">
-            <!-- Paths -->
-            <label>
-              <span>Paths</span>
-              <iron-input bind-value="{{selectedPathName}}">
-                <select aria-label="Paths">
-                   <option>-Select Path-</option>
-                  <template is="dom-repeat" items="[[pathOptions]]" index-as="index">
-                   <option value="[[item.path]]">[[item.path]]</option>
-                  </template>
-                </select>
-              </iron-input>
-            </label>
-
-            <!-- Methods available for selected path -->
-            <template is="dom-if" if="[[selectedPath]]" restamp="true">
+            <div class="horizontal">
+              <!-- Swagger Url -->
               <label>
-                <span>Methods</span>
-                <iron-input bind-value="{{selectedMethodType}}">
-                  <select aria-label="Method">
-                    <option>-Select Method-</option>
-                    <template is="dom-repeat" items="[[selectedPath]]" index-as="index">
-                     <option value="[[item.method]]">[[item.method]]</option>
+                <span>Swagger Url</span>
+                <iron-input bind-value="{{swaggerUrl}}">
+                  <input>
+                </iron-input>
+              </label>
+
+              <!-- Server Url -->
+              <label>
+                <span>Server Url</span>
+                <iron-input bind-value="{{serverUrl}}">
+                  <input>
+                </iron-input>
+              </label>
+            </div>
+
+            <div class="horizontal">
+              <!-- Paths -->
+              <label>
+                <span>Paths</span>
+                <iron-input bind-value="{{selectedPathName}}">
+                  <select aria-label="Paths">
+                    <option>-Select Path-</option>
+                    <template is="dom-repeat" items="[[pathOptions]]" index-as="index">
+                    <option value="[[item.path]]">[[item.path]]</option>
                     </template>
                   </select>
                 </iron-input>
               </label>
+
+              <!-- Methods available for selected path -->
+              <template is="dom-if" if="[[selectedPath]]" restamp="true">
+                <label>
+                  <span>Methods</span>
+                  <iron-input bind-value="{{selectedMethodType}}">
+                    <select aria-label="Method">
+                      <option>-Select Method-</option>
+                      <template is="dom-repeat" items="[[selectedPath]]" index-as="index">
+                      <option value="[[item.method]]">[[item.method]]</option>
+                      </template>
+                    </select>
+                  </iron-input>
+                </label>
+              </template>
+            </div>
+
+            <br>
+            <br>
+            <template is="dom-if" if="[[selectedMethod]]" restamp="true">
+              <paper-tabs selected="{{selectedTab}}">
+                <paper-tab>Test</paper-tab>
+                <paper-tab>Info</paper-tab>
+              </paper-tabs>
+
+              <iron-pages selected="[[selectedTab]]">
+                <div class="info">
+                  <template is="dom-if" if="[[selectedMethod]]">
+                    <div class="horizontal">
+                      <ul>
+                        <li><span>Summary: </span><span>[[selectedMethod.summary]]</span></li>
+                        <li><span>Operation Id: </span><span>[[selectedMethod.operationId]]</span></li>
+                        <li><span>Consumes: </span><span>[[selectedMethod.consumes]]</span></li>
+                        <li><span>Produces: </span><span>[[selectedMethod.produces]]</span></li>
+                      </ul>
+                      <pre>[[exmpleSetup]]</pre>
+                    </div>
+                    <table>
+                      <tbody><tr><th>In</th><th>description</th><th>Name</th><th>Required</th><th>Type / Schema</th></tr>
+                      <template is="dom-repeat" items="[[selectedMethod.parameters]]">
+                        <tr><td>[[item.in]]</td><td>[[item.description]]</td><td>[[item.name]]</td><td>[[item.required]]</td><td><pre>[[_renderType(item)]]</pre></td></tr>
+                      </template>
+                    </tbody></table>
+                  </template>
+                </div>
+                <div class="info">
+                  <div class="horizontal">
+                    <iron-form id="form">
+                      <form>
+                        <div>
+                          <template is="dom-repeat" items="[[selectedMethod.parameters]]" index-as="index">
+                            <label>
+                              <span>[[item.name]] <template is="dom-if" if="[[item.required]]" restamp="true"><strong> * </strong></template> ([[item.description]] - [[item.type]])</span>
+                              <input name="[[item.name]]">
+                            </label>
+                          </template>
+                        </div>
+                        <br>
+                        <button on-tap="_submit">[[selectedMethodType]]</button> (* required)
+                      </form>
+                    </iron-form>
+                  </div>
+                  <pre><template is="dom-repeat" items="[[history]]" index-as="index">[[item.date]] - [[item.data]]<br></template></pre>
+                </div>
+              </iron-pages>
             </template>
           </div>
-
-          <br>
-          <br>
-          <template is="dom-if" if="[[selectedMethod]]" restamp="true">
-            <paper-tabs selected="{{selectedTab}}">
-              <paper-tab>Test</paper-tab>
-              <paper-tab>Info</paper-tab>
-            </paper-tabs>
-
-            <iron-pages selected="[[selectedTab]]">
-              <div class="info">
-                <template is="dom-if" if="[[selectedMethod]]">
-                  <div class="horizontal">
-                    <ul>
-                      <li><span>Summary: </span><span>[[selectedMethod.summary]]</span></li>
-                      <li><span>Operation Id: </span><span>[[selectedMethod.operationId]]</span></li>
-                      <li><span>Consumes: </span><span>[[selectedMethod.consumes]]</span></li>
-                      <li><span>Produces: </span><span>[[selectedMethod.produces]]</span></li>
-                    </ul>
-                    <pre>[[exmpleSetup]]</pre>
-                  </div>
-                  <table>
-                    <tr><th>In</th><th>description</th><th>Name</th><th>Required</th><th>Type / Schema</th></tr>
-                    <template is="dom-repeat" items="[[selectedMethod.parameters]]">
-                      <tr><td>[[item.in]]</td><td>[[item.description]]</td><td>[[item.name]]</td><td>[[item.required]]</td><td><pre>[[_renderType(item)]]</pre></td></tr>
-                    </template>
-                  </table>
-                </template>
-              </div>
-              <div class="info">
-                <div class="horizontal">
-                  <iron-form id="form">
-                    <form>
-                      <div>
-                        <template is="dom-repeat" items="[[selectedMethod.parameters]]" index-as="index">
-                          <label>
-                            <span>[[item.name]] <template is="dom-if" if="[[item.required]]" restamp="true"><strong> * </strong></template> ([[item.description]] - [[item.type]])</span>
-                            <input name="[[item.name]]">
-                          </label>
-                        </template>
-                      </div>
-                      <br>
-                      <button on-tap="_submit">[[selectedMethodType]]</button> (* required)
-                    </form>
-                  </iron-form>
-                </div>
-                <pre>
-                  <template is="dom-repeat" items="[[history]]" index-as="index">[[item.date]] - [[item.data]]<br></template>
-                </pre>
-              </div>
-            </iron-pages>
-          </template>
-        </div>
-      </template>
-      <script>
-        window.addEventListener('WebComponentsReady', () => {
-          class DataConnectionDemo extends Polymer.GestureEventListeners(Polymer.Element) {
-            static get is() {
-              return 'swagger-client-demo';
-            }
-            static get properties() {
-              return {
-                history: {
-                  type: Array,
-                  value: () => [],
-                },
-                lastResponse: {
-                  type: Object,
-                  observer: '_handleNewData',
-                },
-                lastError: {
-                  type: Object,
-                  observer: '_handleError',
-                },
-                swaggerUrl: {
-                  type: String,
-                  value: '',
-                },
-                serverUrl: {
-                  type: String,
-                  value: '',
-                },
-                api: {
-                  type: String,
-                },
-                operationId: {
-                  type: String,
-                },
-                pathOptions: {
-                  type: Array,
-                },
-                selectedPathName: {
-                  type: String,
-                  observer: '_pathNameChanged',
-                },
-                selectedPath: {
-                  type: Object,
-                  computed: '_selectedPathChanged(selectedPathName)',
-                },
-                selectedMethodType: {
-                  type: String,
-                  observer: '_methodTypeChanged',
-                },
-                selectedMethod: {
-                  type: Object,
-                  computed: '_selectedMethodChanged(selectedMethodType)',
-                },
-                overview: {
-                  type: String,
-                  computed: '_generateOverview(selectedMethod)',
-                },
-                apiInitialized: {
-                  type: Boolean,
-                  observer: '_apiInitialized',
-                },
-                selectedTab: {
-                  type: Number,
-                  value: 0,
-                }
-              };
-            }
-            _renderType(item) {
-              console.log('item', item);
-              if (item.type) {
-                return item.type;
-              }
-              return JSON.stringify(item.schema, null, '\t');
-            }
-            _generateOverview(method) {
-              console.log('method', method);
-            }
-            connectedCallback() {
-              super.connectedCallback();
-              this.$.clientConfig.responseInterceptor = (res) => {
-                console.log('responseInterceptor', res);
-              };
-              this.$.clientConfig.requestInterceptor = (req) => {
-                console.log('requestInterceptor', req);
-              };
-              this.$.clientConfig.initSwagger();
-            }
-            _submit() {
-              const form = this.shadowRoot.querySelector('#form');
-              console.log('submit', form, form.serializeForm());
-              const connection = this.shadowRoot.querySelector('#connection');
-              connection.resource = this.selectedMethod.tags[0];
-              connection.method = this.selectedMethod.operationId;
-              connection.params = form.serializeForm();
-              this._updateExample(connection.params);
-              connection.generateRequest();
-            }
-            _updateExample(p) {
-              const params = JSON.stringify(p);
-              this.exmpleSetup = 
-`<exmg-swagger-client
-  api="${this.api}"
-  operation-id="${this.operationId}"
-  params="${params}">
-</exmg-swagger-client>
-              `;
-            }
-            _pathNameChanged() {
-              this.set('selectedMethodType', null);
-            }
-            _methodTypeChanged(type) {
-              if (type) {
-                this.set('api', this.selectedMethod.tags[0]);
-                this.set('operationId', this.selectedMethod.operationId);
-              }
-            }
-            _selectedMethodChanged(method) {
-              const m = this.selectedPath.find((p) => p.method === method);
-              return m ? m.obj : null;
-            }
-            _selectedPathChanged(path) {
-              const obj = this.pathOptions.find(po => po.path === path).obj;
-              return Object.keys(obj).map((k) => ({method: k, obj: obj[k]}));
-            }
-            _addLog(d) {
-              const date = new Intl.DateTimeFormat('en-US', {
-                hour: 'numeric', minute: 'numeric', second: 'numeric',
-              }).format();
-              this.push('history', {date: date, data: d});
-            }
-            _handleError(e) {
-              if (e) {
-                this._addLog(JSON.stringify(e, null, '\t'));
-              }
-            }
-            _handleNewData(d) {
-              if (d) {
-                this._addLog(`Response: ${JSON.stringify(d, null, '\t')}}`);
-              }
-            }
-            _apiInitialized(initialized) {
-              if (!initialized) {
-                return;
-              }
-              const {swaggerClientApi} = this.$.connection;
-              if (!swaggerClientApi) {
-                return;
-              }
-              this._addLog('Swagger Client Initialised');
-              this.set('pathOptions', Object.keys(swaggerClientApi.spec.paths)
-                .map((k) => ({
-                  path: k, obj: swaggerClientApi.spec.paths[k]
-                })));
-            }
+          `;
+        }
+        _renderType(item) {
+          if (item.type) {
+            return item.type;
           }
-          window.customElements.define(DataConnectionDemo.is, DataConnectionDemo);
-        });
-      </script>
-    </dom-module>
-
+          return JSON.stringify(item.schema, null, '\\t');
+        }
+        _generateOverview(method) {
+          console.log('method', method);
+        }
+        connectedCallback() {
+          super.connectedCallback();
+          this.$.clientConfig.responseInterceptor = (res) => {
+            console.log('responseInterceptor', res);
+          };
+          this.$.clientConfig.requestInterceptor = (req) => {
+            console.log('requestInterceptor', req);
+          };
+          this.$.clientConfig.initSwagger();
+        }
+        _submit() {
+          const form = this.shadowRoot.querySelector('#form');
+          console.log('submit', form, form.serializeForm());
+          const connection = this.shadowRoot.querySelector('#connection');
+          connection.resource = this.selectedMethod.tags[0];
+          connection.method = this.selectedMethod.operationId;
+          connection.params = form.serializeForm();
+          this._updateExample(connection.params);
+          connection.generateRequest();
+        }
+        _updateExample(p) {
+          const params = JSON.stringify(p);
+          this.exmpleSetup = `<exmg-swagger-client
+            api="${this.api}"
+            operation-id="\${this.operationId}"
+            params="\${params}">
+          </exmg-swagger-client>`;
+        }
+        _pathNameChanged() {
+          this.set('selectedMethodType', null);
+        }
+        _methodTypeChanged(type) {
+          if (type) {
+            this.set('api', this.selectedMethod.tags[0]);
+            this.set('operationId', this.selectedMethod.operationId);
+          }
+        }
+        _selectedMethodChanged(method) {
+          if (!this.selectedPath) {
+            return;
+          }
+          const m = this.selectedPath.find((p) => p.method === method);
+          return m ? m.obj : null;
+        }
+        _selectedPathChanged(path) {
+          if (!this.pathOptions) {
+            return;
+          }
+          const obj = this.pathOptions.find(po => po.path === path).obj;
+          return Object.keys(obj).map((k) => ({method: k, obj: obj[k]}));
+        }
+        _addLog(d) {
+          const date = new Intl.DateTimeFormat('en-US', {
+            hour: 'numeric', minute: 'numeric', second: 'numeric',
+          }).format();
+          this.push('history', {date: date, data: d});
+        }
+        _handleError(e) {
+          if (e) {
+            this._addLog(JSON.stringify(e, null, '\\t'));
+          }
+        }
+        _handleNewData(d) {
+          if (d) {
+            this._addLog(`Response: ${JSON.stringify(d, null, '\\t')}`);
+          }
+        }
+        _apiInitialized(initialized) {
+          if (!initialized) {
+            return;
+          }
+          const {swaggerClientApi} = this.$.connection;
+          if (!swaggerClientApi) {
+            return;
+          }
+          this._addLog('Swagger Client Initialised');
+          this.set('pathOptions', Object.keys(swaggerClientApi.spec.paths).map((k) => ({
+              path: k, obj: swaggerClientApi.spec.paths[k]
+          })));
+        }
+      }
+      window.customElements.define(SwaggerClientDemo.is, SwaggerClientDemo);
+    </script>
     <swagger-client-demo></swagger-client-demo>
   </body>
 </html>

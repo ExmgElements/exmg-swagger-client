@@ -20,7 +20,8 @@ window.Exmg = window.Exmg || {};
 * @extends Polymer.Element
 * @summary Custom element to initialize Swagger Client Api's
 */
-class DataConnectionConfigElement extends PolymerElement {
+
+export class DataConnectionConfigElement extends PolymerElement {
   static get is() {
     return 'exmg-swagger-client-config';
   }

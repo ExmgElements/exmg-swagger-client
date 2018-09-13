@@ -3,15 +3,18 @@
 <head>
   <title>exmg-swagger-client-config</title>
 
-  <script src="@webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="web-component-tester/browser.js"></script>
-  <script src="fetch-mock/es5/client-bundle.js"></script>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script src="../node_modules/wct-browser-legacy/browser.js"></script>
+  <script src="../node_modules/fetch-mock/dist/es5/client-bundle.js"></script>
+  <script src="../swagger-client/swagger-client.js"></script>
 
-  <script type="module" src="@polymer/polymer/polymer.js"></script>
-  <script type="module" src="@polymer/promise-polyfill/promise-polyfill.js"></script>
+  <script>
+    debugger;
+  </script>
   <script type="module" src="../exmg-swagger-client.js"></script>
   <script type="module" src="../exmg-swagger-client-config.js"></script>
 </head>
+
 <body>
   <test-fixture id="BasicRequest">
     <template>
@@ -40,308 +43,306 @@
       <exmg-swagger-client api="pets" operation-id="listPets" debounce-duration="250"></exmg-swagger-client>
     </template>
   </test-fixture>
+
   <script type="module">
-import '@polymer/polymer/polymer.js';
-import '@polymer/promise-polyfill/promise-polyfill.js';
-import '../exmg-swagger-client.js';
-import '../exmg-swagger-client-config.js';
-suite('<exmg-swagger-client>', _ => {
-  let fixtureNodes;
-  const fetchMock = window.fetchMock;
 
-  const timePasses = (ms) => {
-    return new Promise((resolve) => {
-      window.setTimeout(_ => {
-        resolve();
-      }, ms);
-    });
-  };
+    suite('<exmg-swagger-client>', _ => {
+      let fixtureNodes;
+      const fetchMock = window.fetchMock;
 
-  setup(function() {
+      const timePasses = (ms) => {
+        return new Promise((resolve) => {
+          window.setTimeout(_ => {
+            resolve();
+          }, ms);
+        });
+      };
 
-    fetchMock.get('http://petstore.swagger.io/v1/pets', `[{
-      "id": 1353,
-      "category": {
-        "id": 0,
-        "name": "string"
-      },
-      "name": "doggie",
-      "photoUrls": [
-        "string"
-      ],
-      "tags": [
-        {
-          "id": 0,
-          "name": "string"
-        }
-      ],
-      "status": "available"
-    },
-    {
-      "id": 1370,
-      "category": {
-        "id": 0,
-        "name": "string"
-      },
-      "name": "doggie",
-      "photoUrls": [
-        "string"
-      ],
-      "tags": [
-        {
-          "id": 0,
-          "name": "string"
-        }
-      ],
-      "status": "available"
-    }]`);
+      setup(function() {
 
-    fetchMock.get('/responds_to_get_with_swagger_json_api', `{
-        "swagger": "2.0",
-        "info": {
-          "version": "1.0.0",
-          "title": "Swagger Petstore",
-          "license": {
-            "name": "MIT"
-          }
+        fetchMock.get('http://petstore.swagger.io/v1/pets', `[{
+          "id": 1353,
+          "category": {
+            "id": 0,
+            "name": "string"
+          },
+          "name": "doggie",
+          "photoUrls": [
+            "string"
+          ],
+          "tags": [
+            {
+              "id": 0,
+              "name": "string"
+            }
+          ],
+          "status": "available"
         },
-        "host": "petstore.swagger.io",
-        "basePath": "/v1",
-        "schemes": [
-          "http"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "paths": {
-          "/pets": {
-            "get": {
-              "summary": "List all pets",
-              "operationId": "listPets",
-              "tags": [
-                "pets"
-              ],
-              "parameters": [
-                {
-                  "name": "limit",
-                  "in": "query",
-                  "description": "How many items to return at one time (max 100)",
-                  "required": false,
-                  "type": "integer",
-                  "format": "int32"
-                }
-              ],
-              "responses": {
-                "200": {
-                  "description": "An paged array of pets",
-                  "headers": {
-                    "x-next": {
-                      "type": "string",
-                      "description": "A link to the next page of responses"
+        {
+          "id": 1370,
+          "category": {
+            "id": 0,
+            "name": "string"
+          },
+          "name": "doggie",
+          "photoUrls": [
+            "string"
+          ],
+          "tags": [
+            {
+              "id": 0,
+              "name": "string"
+            }
+          ],
+          "status": "available"
+        }]`);
+
+        fetchMock.get('/responds_to_get_with_swagger_json_api', `{
+            "swagger": "2.0",
+            "info": {
+              "version": "1.0.0",
+              "title": "Swagger Petstore",
+              "license": {
+                "name": "MIT"
+              }
+            },
+            "host": "petstore.swagger.io",
+            "basePath": "/v1",
+            "schemes": [
+              "http"
+            ],
+            "consumes": [
+              "application/json"
+            ],
+            "produces": [
+              "application/json"
+            ],
+            "paths": {
+              "/pets": {
+                "get": {
+                  "summary": "List all pets",
+                  "operationId": "listPets",
+                  "tags": [
+                    "pets"
+                  ],
+                  "parameters": [
+                    {
+                      "name": "limit",
+                      "in": "query",
+                      "description": "How many items to return at one time (max 100)",
+                      "required": false,
+                      "type": "integer",
+                      "format": "int32"
                     }
-                  },
-                  "schema": {
-                    "$ref": "#/definitions/Pets"
+                  ],
+                  "responses": {
+                    "200": {
+                      "description": "An paged array of pets",
+                      "headers": {
+                        "x-next": {
+                          "type": "string",
+                          "description": "A link to the next page of responses"
+                        }
+                      },
+                      "schema": {
+                        "$ref": "#/definitions/Pets"
+                      }
+                    },
+                    "default": {
+                      "description": "unexpected error",
+                      "schema": {
+                        "$ref": "#/definitions/Error"
+                      }
+                    }
                   }
                 },
-                "default": {
-                  "description": "unexpected error",
-                  "schema": {
-                    "$ref": "#/definitions/Error"
+                "post": {
+                  "summary": "Create a pet",
+                  "operationId": "createPets",
+                  "tags": [
+                    "pets"
+                  ],
+                  "responses": {
+                    "201": {
+                      "description": "Null response"
+                    },
+                    "default": {
+                      "description": "unexpected error",
+                      "schema": {
+                        "$ref": "#/definitions/Error"
+                      }
+                    }
+                  }
+                }
+              },
+              "/pets/{petId}": {
+                "get": {
+                  "summary": "Info for a specific pet",
+                  "operationId": "showPetById",
+                  "tags": [
+                    "pets"
+                  ],
+                  "parameters": [
+                    {
+                      "name": "petId",
+                      "in": "path",
+                      "required": true,
+                      "description": "The id of the pet to retrieve",
+                      "type": "string"
+                    }
+                  ],
+                  "responses": {
+                    "200": {
+                      "description": "Expected response to a valid request",
+                      "schema": {
+                        "$ref": "#/definitions/Pets"
+                      }
+                    },
+                    "default": {
+                      "description": "unexpected error",
+                      "schema": {
+                        "$ref": "#/definitions/Error"
+                      }
+                    }
                   }
                 }
               }
             },
-            "post": {
-              "summary": "Create a pet",
-              "operationId": "createPets",
-              "tags": [
-                "pets"
-              ],
-              "responses": {
-                "201": {
-                  "description": "Null response"
-                },
-                "default": {
-                  "description": "unexpected error",
-                  "schema": {
-                    "$ref": "#/definitions/Error"
+            "definitions": {
+              "Pet": {
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tag": {
+                    "type": "string"
+                  }
+                }
+              },
+              "Pets": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Pet"
+                }
+              },
+              "Error": {
+                "required": [
+                  "code",
+                  "message"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "message": {
+                    "type": "string"
                   }
                 }
               }
             }
-          },
-          "/pets/{petId}": {
-            "get": {
-              "summary": "Info for a specific pet",
-              "operationId": "showPetById",
-              "tags": [
-                "pets"
-              ],
-              "parameters": [
-                {
-                  "name": "petId",
-                  "in": "path",
-                  "required": true,
-                  "description": "The id of the pet to retrieve",
-                  "type": "string"
-                }
-              ],
-              "responses": {
-                "200": {
-                  "description": "Expected response to a valid request",
-                  "schema": {
-                    "$ref": "#/definitions/Pets"
-                  }
-                },
-                "default": {
-                  "description": "unexpected error",
-                  "schema": {
-                    "$ref": "#/definitions/Error"
-                  }
-                }
-              }
+          }`);
+        fixtureNodes = fixture('BasicRequest');
+
+      });
+
+      teardown(function() {
+        fetchMock.restore();
+      });
+
+      suite('basic usage', _ => {
+        test('Test basic api pet list call', function(done) {
+          timePasses(100).then(_ => {
+            fixtureNodes[1].generateRequest().then((res) => {
+              expect(res.length).to.be.equal(2);
+              done();
+            });
+          });
+        });
+      });
+
+      suite('when using the bubbles attribute', function() {
+        test('the request and response events should bubble to window', function(done) {
+          let total = 0;
+          const incrementTotal = _ => {
+            total++;
+            if (total === 2) {
+              done();
             }
-          }
-        },
-        "definitions": {
-          "Pet": {
-            "required": [
-              "id",
-              "name"
-            ],
-            "properties": {
-              "id": {
-                "type": "integer",
-                "format": "int64"
-              },
-              "name": {
-                "type": "string"
-              },
-              "tag": {
-                "type": "string"
-              }
-            }
-          },
-          "Pets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/Pet"
-            }
-          },
-          "Error": {
-            "required": [
-              "code",
-              "message"
-            ],
-            "properties": {
-              "code": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "message": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }`);
-    fixtureNodes = fixture('BasicRequest');
+          };
+          window.addEventListener('exmg-swagger-request', incrementTotal);
+          window.addEventListener('exmg-swagger-response', incrementTotal);
+          const bubbleEvents = fixture('BubbleEvents');
+          bubbleEvents[0].addEventListener('swagger-api-initialized', (event) => {
+            bubbleEvents[1].generateRequest();
+          });
+        });
 
-  });
+        test('error events should bubble to window', function(done) {
+          window.addEventListener('exmg-swagger-error', (e) => {
+            done();
+          });
+          const bubbleEvents = fixture('BubbleEvents');
+          bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
+            bubbleEvents[2].generateRequest();
+          });
+        });
 
-  teardown(function() {
-    fetchMock.restore();
-  });
+        test('error on operation id not found', function(done) {
+          const bubbleEvents = fixture('Atrributes');
+          bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
+            bubbleEvents[1].generateRequest().catch((e) => {
+              expect(e).to.be.equal('Operation Id  not found');
+              done();
+            });
+          });
+        });
 
-  suite('basic usage', _ => {
-    test('Test basic api pet list call', function(done) {
-      timePasses(100).then(_ => {
-        fixtureNodes[1].generateRequest().then((res) => {
-          expect(res.length).to.be.equal(2);
-          done();
+        test('error no api given', function(done) {
+          const bubbleEvents = fixture('Atrributes');
+          bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
+            bubbleEvents[2].generateRequest().catch((e) => {
+              expect(e).to.be.equal('No api given');
+              done();
+            });
+          });
+        });
+
+        test('error on api not found', function(done) {
+          const bubbleEvents = fixture('Atrributes');
+          bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
+            bubbleEvents[3].generateRequest().catch((e) => {
+              expect(e).to.be.equal('Api x not found');
+              done();
+            });
+          });
+        });
+      });
+      suite('when debouncing requests', function() {
+        test('only requests a single resource', function(done) {
+          const debouncedGet = fixture('DebouncedGet');
+          timePasses(100).then(_ => {
+            debouncedGet[1].auto = true;
+            debouncedGet[1]._requestOptionsChanged();
+            expect(debouncedGet[1].lastResponse).to.be.equal(undefined);
+            debouncedGet[1]._requestOptionsChanged();
+            return timePasses(500).then(function() {
+              expect(debouncedGet[1].lastResponse).to.be.ok;
+              done();
+            });
+          });
         });
       });
     });
-  });
-
-  suite('when using the bubbles attribute', function() {
-    test('the request and response events should bubble to window', function(done) {
-      let total = 0;
-      const incrementTotal = _ => {
-        total++;
-        if (total === 2) {
-          done();
-        }
-      };
-      window.addEventListener('exmg-swagger-request', incrementTotal);
-      window.addEventListener('exmg-swagger-response', incrementTotal);
-      const bubbleEvents = fixture('BubbleEvents');
-      bubbleEvents[0].addEventListener('swagger-api-initialized', (event) => {
-        bubbleEvents[1].generateRequest();
-      });
-    });
-
-    test('error events should bubble to window', function(done) {
-      window.addEventListener('exmg-swagger-error', (e) => {
-        done();
-      });
-      const bubbleEvents = fixture('BubbleEvents');
-      bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
-        bubbleEvents[2].generateRequest();
-      });
-    });
-
-    test('error on operation id not found', function(done) {
-      const bubbleEvents = fixture('Atrributes');
-      bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
-        bubbleEvents[1].generateRequest().catch((e) => {
-          expect(e).to.be.equal('Operation Id  not found');
-          done();
-        });
-      });
-    });
-
-    test('error no api given', function(done) {
-      const bubbleEvents = fixture('Atrributes');
-      bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
-        bubbleEvents[2].generateRequest().catch((e) => {
-          expect(e).to.be.equal('No api given');
-          done();
-        });
-      });
-    });
-
-    test('error on api not found', function(done) {
-      const bubbleEvents = fixture('Atrributes');
-      bubbleEvents[0].addEventListener('swagger-api-initialized', _ => {
-        bubbleEvents[3].generateRequest().catch((e) => {
-          expect(e).to.be.equal('Api x not found');
-          done();
-        });
-      });
-    });
-  });
-  suite('when debouncing requests', function() {
-    test('only requests a single resource', function(done) {
-      const debouncedGet = fixture('DebouncedGet');
-      timePasses(100).then(_ => {
-        debouncedGet[1].auto = true;
-        debouncedGet[1]._requestOptionsChanged();
-        expect(debouncedGet[1].lastResponse).to.be.equal(undefined);
-        debouncedGet[1]._requestOptionsChanged();
-        return timePasses(500).then(function() {
-          expect(debouncedGet[1].lastResponse).to.be.ok;
-          done();
-        });
-      });
-    });
-  });
-});
-</script>
+  </script>
 
 </body>
 </html>

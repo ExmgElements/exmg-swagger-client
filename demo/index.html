@@ -32,7 +32,7 @@
   </head>
   <body>
     <script type="module">
-      import {PolymerElement, html} from '../node_modules/@polymer/polymer/polymer-element.js?module';
+      import {PolymerElement, html} from '../node_modules/@polymer/polymer/polymer-element.js';
 
       class SwaggerClientDemo extends PolymerElement {
         static get is() {
@@ -54,11 +54,11 @@
             },
             swaggerUrl: {
               type: String,
-              value: '',
+              value: 'api.json',
             },
             serverUrl: {
               type: String,
-              value: '',
+              value: 'http://swagger.io',
             },
             api: {
               type: String,

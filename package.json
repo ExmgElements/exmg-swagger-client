@@ -37,7 +37,7 @@
     "eslint": "^4.11.0",
     "eslint-config-exmg": "latest",
     "eslint-plugin-html": "^3.0.0",
-    "fetch-mock": "^7.0.0-alpha.6",
+    "fetch-mock": "^5.13.1",
     "wct-browser-legacy": "^1.0.1"
   },
   "scripts": {

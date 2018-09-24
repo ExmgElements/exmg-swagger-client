@@ -30,6 +30,7 @@ window.Exmg = window.Exmg || {};
 * @extends Polymer.Element
 * @summary Custom element to connect to a restfull API layer using a Swagger 2.0 schema
 */
+
 export class DataConnectionElement extends SwaggerCommonMixin(PolymerElement) {
 
   /**

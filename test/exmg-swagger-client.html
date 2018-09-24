@@ -5,7 +5,7 @@
 
   <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
   <script src="../node_modules/wct-browser-legacy/browser.js"></script>
-  <script src="../node_modules/fetch-mock/dist/es5/client-bundle.js"></script>
+  <script src="../node_modules/fetch-mock/es5/client-browserified.js"></script>
   <script src="../swagger-client/swagger-client.js"></script>
   
   <script type="module" src="../exmg-swagger-client.js"></script>
@@ -56,7 +56,6 @@
       };
 
       setup(function() {
-
         fetchMock.get('http://petstore.swagger.io/v1/pets', `[{
           "id": 1353,
           "category": {

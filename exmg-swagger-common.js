@@ -9,6 +9,7 @@ import {dedupingMixin} from '@polymer/polymer/lib/utils/mixin.js';
  * @memberof Exmg
  * @mixinFunction
  */
+
 const swaggerCommon = (superClass) => class extends superClass {
   static get properties() {
     return {

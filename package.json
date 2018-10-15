@@ -1,7 +1,7 @@
 {
   "name": "@exmg/exmg-swagger-client",
   "flat": true,
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Element for using Swagger 2.0 generated API",
   "contributors": [
     "Ex Machina Group"
